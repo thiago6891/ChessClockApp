@@ -29,7 +29,7 @@ namespace ChessClockApp
             {
                 _watches[p] = new Stopwatch();
                 _timers[p] = new Timer(GetRemainingTime(p).TotalMilliseconds);
-                _timers[p].Elapsed += TimesUpEventHandler;
+                _timers[p].Elapsed += (sender, e) => Stop();
             }
 
             _gameOver = false;
@@ -86,13 +86,8 @@ namespace ChessClockApp
 
                 _totalTimes[player] += _increments[player];
                 _timers[player] = new Timer(GetRemainingTime(player).TotalMilliseconds);
-                _timers[player].Elapsed += TimesUpEventHandler;
+                _timers[player].Elapsed += (sender, e) => Stop();
             }
-        }
-
-        private void TimesUpEventHandler(object sender, ElapsedEventArgs e)
-        {
-            Stop();
         }
 
         private TimeSpan GetRemainingTime(int player)
