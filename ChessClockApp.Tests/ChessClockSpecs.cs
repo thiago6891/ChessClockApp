@@ -25,8 +25,8 @@ namespace ChessClockApp.Tests
         public void EitherPlayerCanStartTheClock()
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
-            var clock1 = new ChessClock(gameTime);
-            var clock2 = new ChessClock(gameTime);
+            var clock1 = new NoDelayChessClock(gameTime);
+            var clock2 = new NoDelayChessClock(gameTime);
             var waitTime = GetRandomTimeMilliseconds(100, 200);
 
             clock1.PressButton(Player.ONE);
@@ -45,7 +45,7 @@ namespace ChessClockApp.Tests
         public void PressingTheSameButtonTwiceInARowHasNoEffect()
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
-            var clock = new ChessClock(gameTime);
+            var clock = new NoDelayChessClock(gameTime);
             var waitTime = GetRandomTimeMilliseconds(100, 200);
 
             clock.PressButton(Player.TWO);
@@ -62,7 +62,7 @@ namespace ChessClockApp.Tests
         public void ClockShouldCountdownAsExpected()
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
-            var clock = new ChessClock(gameTime);
+            var clock = new NoDelayChessClock(gameTime);
             var playerOneWaitTime = GetRandomTimeMilliseconds(100, 200);
             var playerTwoWaitTime = GetRandomTimeMilliseconds(100, 200);
 
@@ -84,7 +84,7 @@ namespace ChessClockApp.Tests
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
             var incrementTime = GetRandomTimeSeconds(1, 10);
-            var clock = new ChessClock(gameTime, incrementTime, TimeControl.FISCHER);
+            var clock = new FischerDelayChessClock(gameTime, incrementTime);
             var waitTime = GetRandomTimeMilliseconds(100, 200);
 
             var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
@@ -102,7 +102,7 @@ namespace ChessClockApp.Tests
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
             var delay = GetRandomTimeMilliseconds(150, 200);
-            var clock = new ChessClock(gameTime, delay, TimeControl.BRONSTEIN);
+            var clock = new BronsteinDelayChessClock(gameTime, delay);
             var playerOneWaitTime = delay - GetRandomTimeMilliseconds(50, 100);
             var playerTwoWaitTime = delay + GetRandomTimeMilliseconds(50, 100);
 
@@ -123,7 +123,7 @@ namespace ChessClockApp.Tests
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
             var delay = GetRandomTimeMilliseconds(150, 200);
-            var clock = new ChessClock(gameTime, delay, TimeControl.DELAY);
+            var clock = new NormalDelayChessClock(gameTime, delay);
             var playerOneWaitTime = delay - GetRandomTimeMilliseconds(50, 100);
             var playerTwoWaitTime = delay + GetRandomTimeMilliseconds(50, 100);
 
@@ -143,7 +143,7 @@ namespace ChessClockApp.Tests
         public void BothTimersShouldFreezeWhenOneReachesZero()
         {
             var gameTime = GetRandomTimeMilliseconds(100, 200);
-            var clock = new ChessClock(gameTime);
+            var clock = new NoDelayChessClock(gameTime);
             var waitTime = GetRandomTimeMilliseconds(40, 60);
 
             clock.PressButton(Player.TWO);
@@ -159,7 +159,7 @@ namespace ChessClockApp.Tests
         public void ClockCanBeReset()
         {
             var gameTime = GetRandomTimeMinutes(1, 30);
-            var clock = new ChessClock(gameTime);
+            var clock = new NoDelayChessClock(gameTime);
             var waitTime = GetRandomTimeMilliseconds(100, 200);
 
             clock.PressButton(Player.TWO);

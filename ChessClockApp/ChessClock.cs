@@ -10,55 +10,28 @@ namespace ChessClockApp
         TWO
     }
 
-    public enum TimeControl
-    {
-        FISCHER,
-        BRONSTEIN,
-        DELAY
-    }
-
-    public class ChessClock
+    public abstract class ChessClock : IDisposable
     {
         private readonly TimeSpan _gameTime;
-        private readonly TimeSpan _delayTime;
-        private readonly TimeControl? _timeControl;
-        private readonly Dictionary<Player, TimeSpan> _remainingTime = new Dictionary<Player, TimeSpan>(2)
-        {
-            { Player.ONE, TimeSpan.Zero },
-            { Player.TWO, TimeSpan.Zero }
-        };
-
-        private TimeSpan TimerElapsedTime => _lastTimerStart.HasValue ? 
-            DateTime.Now - _lastTimerStart.Value : TimeSpan.Zero;
 
         private Timer _countdownTimer;
         private DateTime? _lastTimerStart;
         private Player? _currentPlayer;
 
-        public ChessClock(TimeSpan gameTime) : this(gameTime, TimeSpan.Zero, null) { }
+        protected readonly Dictionary<Player, TimeSpan> _remainingTime = new Dictionary<Player, TimeSpan>(2)
+        {
+            { Player.ONE, TimeSpan.Zero },
+            { Player.TWO, TimeSpan.Zero }
+        };
 
-        public ChessClock(TimeSpan gameTime, TimeSpan delayTime, TimeControl? timeControl)
+        protected TimeSpan TimerElapsedTime => _lastTimerStart.HasValue ?
+            DateTime.Now - _lastTimerStart.Value : TimeSpan.Zero;
+
+        public ChessClock(TimeSpan gameTime)
         {
             _gameTime = gameTime;
             _remainingTime[Player.ONE] = gameTime;
             _remainingTime[Player.TWO] = gameTime;
-
-            if (timeControl.HasValue)
-            {
-                _delayTime = delayTime;
-                _timeControl = timeControl;
-                if (_timeControl.Value == TimeControl.BRONSTEIN)
-                {
-                    _remainingTime[Player.ONE] += _delayTime;
-                    _remainingTime[Player.TWO] += _delayTime;
-                }
-            }
-            else
-            {
-                _delayTime = TimeSpan.Zero;
-                _timeControl = null;
-            }
-
             _countdownTimer = new Timer(TimeUp);
             _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
@@ -68,7 +41,7 @@ namespace ChessClockApp
             if (ChangePlayer(player))
             {
                 UpdatePlayerRemainingTime(player);
-                ResetTimer();
+                RestartTimer();
             }
         }
 
@@ -101,7 +74,7 @@ namespace ChessClockApp
             return true;
         }
 
-        private void ResetTimer()
+        private void RestartTimer()
         {
             _countdownTimer.Dispose();
             _countdownTimer = new Timer(TimeUp);
@@ -119,21 +92,7 @@ namespace ChessClockApp
             _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
-        private void UpdatePlayerRemainingTime(Player player)
-        {
-            if (_timeControl.HasValue)
-            {
-                if (_timeControl.Value == TimeControl.FISCHER)
-                    _remainingTime[player] += _delayTime - TimerElapsedTime;
-
-                if (_timeControl.Value == TimeControl.BRONSTEIN || _timeControl.Value == TimeControl.DELAY)
-                    if (TimerElapsedTime > _delayTime)
-                        _remainingTime[player] += _delayTime - TimerElapsedTime;
-            }
-            else
-            {
-                _remainingTime[player] -= TimerElapsedTime;
-            }
-        }
+        public void Dispose() => _countdownTimer.Dispose();
+        protected abstract void UpdatePlayerRemainingTime(Player player);
     }
 }
