@@ -1,206 +1,176 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ChessClockApp.Tests
 {
     [TestClass]
     public class ChessClockSpecs
     {
-        private readonly TimeSpan _errorMargin = TimeSpan.FromMilliseconds(10);
+        private readonly TimeSpan _errorMargin = TimeSpan.FromMilliseconds(20);
 
         private bool IsWithinErrorMargin(TimeSpan expected, TimeSpan actual) =>
             expected - _errorMargin <= actual && actual <= expected + _errorMargin;
 
+        private TimeSpan GetRandomTimeMinutes(int minTime, int maxTime) =>
+            TimeSpan.FromMinutes((new Random()).Next(minTime, maxTime));
+
+        private TimeSpan GetRandomTimeSeconds(int minTime, int maxTime) =>
+            TimeSpan.FromSeconds((new Random()).Next(minTime, maxTime));
+
+        private TimeSpan GetRandomTimeMilliseconds(int minTime, int maxTime) =>
+            TimeSpan.FromMilliseconds((new Random()).Next(minTime, maxTime));
+
         [TestMethod]
-        public void ChessClockShouldConfigureBothPlayersTime()
+        public void EitherPlayerCanStartTheClock()
         {
-            var expectedWhiteTime = TimeSpan.FromMinutes(5);
-            var expectedBlackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(expectedWhiteTime, expectedBlackTime);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var clock1 = new ChessClock(gameTime);
+            var clock2 = new ChessClock(gameTime);
+            var waitTime = GetRandomTimeMilliseconds(100, 200);
 
-            var actualWhiteTime = clock.WhiteRemainingTime;
-            var actualBlackTime = clock.BlackRemainingTime;
+            clock1.PressButton(Player.ONE);
+            clock2.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            var playerOneTimeLeft = clock2.GetRemainingTime(Player.ONE);
+            var playerTwoTimeLeft = clock1.GetRemainingTime(Player.TWO);
 
-            Assert.AreEqual(expectedWhiteTime, actualWhiteTime);
-            Assert.AreEqual(expectedBlackTime, actualBlackTime);
+            Assert.AreEqual(gameTime, clock1.GetRemainingTime(Player.ONE));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime, playerTwoTimeLeft));
+            Assert.AreEqual(gameTime, clock2.GetRemainingTime(Player.TWO));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime, playerOneTimeLeft));
         }
 
         [TestMethod]
-        public void ChessClockShouldDecrementBothPlayersTime()
+        public void PressingTheSameButtonTwiceInARowHasNoEffect()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(whiteTime, blackTime);
-            var expectedWhiteWaitTime = TimeSpan.FromMilliseconds(500);
-            var expectedBlackWaitTime = TimeSpan.FromMilliseconds(400);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var clock = new ChessClock(gameTime);
+            var waitTime = GetRandomTimeMilliseconds(100, 200);
 
-            clock.PressBlackStopButton();
-            Thread.Sleep(expectedWhiteWaitTime);
-            clock.PressWhiteStopButton();
-            var actualWhiteWaitTime = whiteTime - clock.WhiteRemainingTime;
-            Thread.Sleep(expectedBlackWaitTime);
-            clock.PressBlackStopButton();
-            var actualBlackWaitTime = blackTime - clock.BlackRemainingTime;
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
 
-            Assert.IsTrue(IsWithinErrorMargin(expectedWhiteWaitTime, actualWhiteWaitTime));
-            Assert.IsTrue(IsWithinErrorMargin(expectedBlackWaitTime, actualBlackWaitTime));
+            Assert.AreEqual(gameTime, clock.GetRemainingTime(Player.TWO));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime - waitTime, playerOneTimeLeft));
         }
 
         [TestMethod]
-        public void ChessClockShouldApplyIncrementWhenPlayerFinishesTurn()
+        public void ClockShouldCountdownAsExpected()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var whiteIncrement = TimeSpan.FromSeconds(1);
-            var blackIncrement = TimeSpan.FromSeconds(2);
-            var clock = new ChessClock(whiteTime, blackTime, whiteIncrement, blackIncrement);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var clock = new ChessClock(gameTime);
+            var playerOneWaitTime = GetRandomTimeMilliseconds(100, 200);
+            var playerTwoWaitTime = GetRandomTimeMilliseconds(100, 200);
 
-            clock.PressBlackStopButton();
-            clock.PressWhiteStopButton();
-            var actualWhiteTime = clock.WhiteRemainingTime;
-            clock.PressBlackStopButton();
-            var actualBlackTime = clock.BlackRemainingTime;
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(playerOneWaitTime);
+            clock.PressButton(Player.ONE);
+            var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
+            Thread.Sleep(playerTwoWaitTime);
+            clock.PressButton(Player.TWO);
+            var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
 
-            var expectedWhiteTime = whiteTime + whiteIncrement;
-            var expectedBlackTime = blackTime + blackIncrement;
-            Assert.IsTrue(IsWithinErrorMargin(expectedWhiteTime, actualWhiteTime));
-            Assert.IsTrue(IsWithinErrorMargin(expectedBlackTime, actualBlackTime));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - playerOneWaitTime, playerOneTimeLeft));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - playerTwoWaitTime, playerTwoTimeLeft));
         }
 
         [TestMethod]
-        public void TheFirstTimeTheBlackButtonIsPressedShouldNotIncrementTheTime()
+        // Under FIDE and US Chess rules, the Fischer increment should be applied on the first move as well.
+        public void FischerIncrementsShouldBeAppliedOnEveryMove()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var whiteIncrement = TimeSpan.FromSeconds(1);
-            var blackIncrement = TimeSpan.FromSeconds(2);
-            var clock = new ChessClock(whiteTime, blackTime, whiteIncrement, blackIncrement);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var incrementTime = GetRandomTimeSeconds(1, 10);
+            var clock = new ChessClock(gameTime, incrementTime, TimeControl.FISCHER);
+            var waitTime = GetRandomTimeMilliseconds(100, 200);
 
-            clock.PressBlackStopButton();
-            var actualBlackTime = clock.BlackRemainingTime;
+            var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.PressButton(Player.ONE);
+            var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
 
-            Assert.AreEqual(blackTime, actualBlackTime);
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime + incrementTime, playerOneTimeLeft));
+            Assert.AreEqual(gameTime, playerTwoTimeLeft);
         }
 
         [TestMethod]
-        public void PressingTheSameStopButtonTwiceInARowHasNoEffect()
+        public void BronsteinDelayShouldBeApplied()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(whiteTime, blackTime);
-            var whiteWaitTime = TimeSpan.FromMilliseconds(250);
-            var blackWaitTime = TimeSpan.FromMilliseconds(200);
-            var expectedWhiteRemainingTime = whiteTime - (whiteWaitTime + whiteWaitTime);
-            var expectedBlackRemainingTime = blackTime - (blackWaitTime + blackWaitTime);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var delay = GetRandomTimeMilliseconds(150, 200);
+            var clock = new ChessClock(gameTime, delay, TimeControl.BRONSTEIN);
+            var playerOneWaitTime = delay - GetRandomTimeMilliseconds(50, 100);
+            var playerTwoWaitTime = delay + GetRandomTimeMilliseconds(50, 100);
 
-            clock.PressBlackStopButton();
-            Thread.Sleep(whiteWaitTime);
-            clock.PressBlackStopButton();
-            Thread.Sleep(whiteWaitTime);
-            clock.PressWhiteStopButton();
-            var actualWhiteRemainingTime = clock.WhiteRemainingTime;
-            Thread.Sleep(blackWaitTime);
-            clock.PressWhiteStopButton();
-            Thread.Sleep(blackWaitTime);
-            clock.PressBlackStopButton();
-            var actualBlackRemainingTime = clock.BlackRemainingTime;
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(playerOneWaitTime);
+            clock.PressButton(Player.ONE);
+            var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
+            Thread.Sleep(playerTwoWaitTime);
+            clock.PressButton(Player.TWO);
+            var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
 
-            Assert.IsTrue(IsWithinErrorMargin(expectedWhiteRemainingTime, actualWhiteRemainingTime));
-            Assert.IsTrue(IsWithinErrorMargin(expectedBlackRemainingTime, actualBlackRemainingTime));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime + delay, playerOneTimeLeft));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime + delay - playerTwoWaitTime + delay, playerTwoTimeLeft));
         }
 
         [TestMethod]
-        public void PressingTheBlackButtonStartsTheGame()
+        public void NormalDelayShouldBeApplied()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(whiteTime, blackTime);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var delay = GetRandomTimeMilliseconds(150, 200);
+            var clock = new ChessClock(gameTime, delay, TimeControl.DELAY);
+            var playerOneWaitTime = delay - GetRandomTimeMilliseconds(50, 100);
+            var playerTwoWaitTime = delay + GetRandomTimeMilliseconds(50, 100);
 
-            clock.PressBlackStopButton();
-            Thread.Sleep(100);
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(playerOneWaitTime);
+            clock.PressButton(Player.ONE);
+            var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
+            Thread.Sleep(playerTwoWaitTime);
+            clock.PressButton(Player.TWO);
+            var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
 
-            Assert.IsTrue(clock.WhiteRemainingTime < whiteTime);
+            Assert.IsTrue(IsWithinErrorMargin(gameTime, playerOneTimeLeft));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime + delay - playerTwoWaitTime, playerTwoTimeLeft));
         }
 
         [TestMethod]
-        public void PressingTheWhiteButtonDoesNotStartTheGame()
+        public void BothTimersShouldFreezeWhenOneReachesZero()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(whiteTime, blackTime);
+            var gameTime = GetRandomTimeMilliseconds(100, 200);
+            var clock = new ChessClock(gameTime);
+            var waitTime = GetRandomTimeMilliseconds(40, 60);
 
-            clock.PressWhiteStopButton();
-            Thread.Sleep(100);
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.PressButton(Player.ONE);
+            Thread.Sleep(gameTime + _errorMargin);
 
-            Assert.AreEqual(whiteTime, clock.WhiteRemainingTime);
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime, clock.GetRemainingTime(Player.ONE)));
+            Assert.AreEqual(TimeSpan.Zero, clock.GetRemainingTime(Player.TWO));
         }
 
         [TestMethod]
-        public void ChessClockCanBeStopped()
+        public void ClockCanBeReset()
         {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(whiteTime, blackTime);
+            var gameTime = GetRandomTimeMinutes(1, 30);
+            var clock = new ChessClock(gameTime);
+            var waitTime = GetRandomTimeMilliseconds(100, 200);
 
-            clock.PressBlackStopButton();
-            Thread.Sleep(100);
-            clock.Stop();
-            var expectedWhiteTime = clock.WhiteRemainingTime;
-            var expectedBlackTime = clock.BlackRemainingTime;
-            Thread.Sleep(100);
-            var actualWhiteTime = clock.WhiteRemainingTime;
-            var actualBlackTime = clock.BlackRemainingTime;
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.PressButton(Player.ONE);
+            Thread.Sleep(waitTime);
+            clock.Reset();
+            Thread.Sleep(waitTime);
 
-            Assert.AreEqual(expectedWhiteTime, actualWhiteTime);
-            Assert.AreEqual(expectedBlackTime, actualBlackTime);
-        }
-
-        [TestMethod]
-        public void ChessClockCanNotBeResumedAfterStopping()
-        {
-            var whiteTime = TimeSpan.FromMinutes(5);
-            var blackTime = TimeSpan.FromMinutes(4);
-            var clock = new ChessClock(whiteTime, blackTime);
-
-            clock.PressBlackStopButton();
-            Thread.Sleep(100);
-            clock.Stop();
-            var expectedWhiteTime = clock.WhiteRemainingTime;
-            var expectedBlackTime = clock.BlackRemainingTime;
-            Thread.Sleep(100);
-            clock.PressBlackStopButton();
-            Thread.Sleep(100);
-            clock.PressWhiteStopButton();
-            Thread.Sleep(100);
-            var actualWhiteTime = clock.WhiteRemainingTime;
-            var actualBlackTime = clock.BlackRemainingTime;
-
-            Assert.AreEqual(expectedWhiteTime, actualWhiteTime);
-            Assert.AreEqual(expectedBlackTime, actualBlackTime);
-        }
-
-        [TestMethod]
-        public void OnceOneOfTheTimersReachZeroTheButtonsStopWorkingAndBothTimersAreFrozen()
-        {
-            var whiteTime = TimeSpan.FromMilliseconds(100);
-            var blackTime = TimeSpan.FromMilliseconds(200);
-            var clock = new ChessClock(whiteTime, blackTime);
-
-            clock.PressBlackStopButton();
-            Thread.Sleep(whiteTime);
-            var expectedWhiteTime = TimeSpan.Zero;
-            var expectedBlackTime = blackTime;
-            Thread.Sleep(100);
-            clock.PressBlackStopButton();
-            Thread.Sleep(100);
-            clock.PressWhiteStopButton();
-            Thread.Sleep(100);
-            var actualWhiteTime = clock.WhiteRemainingTime;
-            var actualBlackTime = clock.BlackRemainingTime;
-
-            Assert.AreEqual(expectedWhiteTime, actualWhiteTime);
-            Assert.AreEqual(expectedBlackTime, actualBlackTime);
+            Assert.AreEqual(gameTime, clock.GetRemainingTime(Player.ONE));
+            Assert.AreEqual(gameTime, clock.GetRemainingTime(Player.TWO));
         }
     }
 }

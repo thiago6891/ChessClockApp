@@ -1,104 +1,139 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Timers;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace ChessClockApp
 {
+    public enum Player
+    {
+        ONE,
+        TWO
+    }
+
+    public enum TimeControl
+    {
+        FISCHER,
+        BRONSTEIN,
+        DELAY
+    }
+
     public class ChessClock
     {
-        private const int WHITE = 0;
-        private const int BLACK = 1;
-        private const int TOTAL_PLAYERS = 2;
-
-        private readonly TimeSpan[] _totalTimes = new TimeSpan[TOTAL_PLAYERS];
-        private readonly TimeSpan[] _increments = new TimeSpan[TOTAL_PLAYERS];
-        private readonly Stopwatch[] _watches = new Stopwatch[TOTAL_PLAYERS];
-        private readonly Timer[] _timers = new Timer[TOTAL_PLAYERS];
-
-        private bool _gameOver;
-
-        public TimeSpan WhiteRemainingTime { get => GetRemainingTime(WHITE); }
-        public TimeSpan BlackRemainingTime { get => GetRemainingTime(BLACK); }
-
-        public ChessClock(TimeSpan whiteTime, TimeSpan blackTime)
+        private readonly TimeSpan _gameTime;
+        private readonly TimeSpan _delayTime;
+        private readonly TimeControl? _timeControl;
+        private readonly Dictionary<Player, TimeSpan> _remainingTime = new Dictionary<Player, TimeSpan>(2)
         {
-            _totalTimes[WHITE] = whiteTime;
-            _totalTimes[BLACK] = blackTime;
-            
-            for (int p = WHITE; p < TOTAL_PLAYERS; p++)
+            { Player.ONE, TimeSpan.Zero },
+            { Player.TWO, TimeSpan.Zero }
+        };
+
+        private TimeSpan TimerElapsedTime => _lastTimerStart.HasValue ? 
+            DateTime.Now - _lastTimerStart.Value : TimeSpan.Zero;
+
+        private Timer _countdownTimer;
+        private DateTime? _lastTimerStart;
+        private Player? _currentPlayer;
+
+        public ChessClock(TimeSpan gameTime) : this(gameTime, TimeSpan.Zero, null) { }
+
+        public ChessClock(TimeSpan gameTime, TimeSpan delayTime, TimeControl? timeControl)
+        {
+            _gameTime = gameTime;
+            _remainingTime[Player.ONE] = gameTime;
+            _remainingTime[Player.TWO] = gameTime;
+
+            if (timeControl.HasValue)
             {
-                _watches[p] = new Stopwatch();
-                _timers[p] = new Timer(GetRemainingTime(p).TotalMilliseconds);
-                _timers[p].Elapsed += (sender, e) => Stop();
-            }
-
-            _gameOver = false;
-        }
-
-        public ChessClock(TimeSpan whiteTime, TimeSpan blackTime, TimeSpan whiteIncrement, TimeSpan blackIncrement)
-            : this(whiteTime, blackTime)
-        {
-            _increments[WHITE] = whiteIncrement;
-            _increments[BLACK] = blackIncrement;
-        }
-
-        public void PressBlackStopButton()
-        {
-            bool GameStarted = _gameOver || _watches[WHITE].IsRunning || _watches[BLACK].IsRunning;
-            if (!GameStarted)
-            {
-                _watches[WHITE].Start();
-                _timers[WHITE].Start();
+                _delayTime = delayTime;
+                _timeControl = timeControl;
+                if (_timeControl.Value == TimeControl.BRONSTEIN)
+                {
+                    _remainingTime[Player.ONE] += _delayTime;
+                    _remainingTime[Player.TWO] += _delayTime;
+                }
             }
             else
             {
-                PressStopButton(BLACK);
+                _delayTime = TimeSpan.Zero;
+                _timeControl = null;
             }
+
+            _countdownTimer = new Timer(TimeUp);
+            _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
-        public void PressWhiteStopButton()
+        public void PressButton(Player player)
         {
-            PressStopButton(WHITE);
-        }
-
-        public void Stop()
-        {
-            foreach (var timer in _timers)
+            if (ChangePlayer(player))
             {
-                timer.Stop();
-                timer.Dispose();
+                UpdatePlayerRemainingTime(player);
+                ResetTimer();
             }
-            foreach (var watch in _watches) watch.Stop();
-            _gameOver = true;
         }
 
-        private void PressStopButton(int player)
+        public TimeSpan GetRemainingTime(Player player)
         {
-            var otherPlayer = (player + 1) % TOTAL_PLAYERS;
-            if (!_gameOver && _watches[player].IsRunning)
+            var elapsedTime = TimeSpan.Zero;
+            if (player == _currentPlayer)
+                elapsedTime = TimerElapsedTime;
+            return _remainingTime[player] - elapsedTime;
+        }
+
+        public void Reset()
+        {
+            _remainingTime[Player.ONE] = _gameTime;
+            _remainingTime[Player.TWO] = _gameTime;
+            _currentPlayer = null;
+            _lastTimerStart = null;
+            _countdownTimer.Dispose();
+            _countdownTimer = new Timer(TimeUp);
+            _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        private bool ChangePlayer(Player from)
+        {
+            var otherPlayer = from == Player.ONE ? Player.TWO : Player.ONE;
+            if (_currentPlayer == otherPlayer)
+                return false;
+
+            _currentPlayer = otherPlayer;
+            return true;
+        }
+
+        private void ResetTimer()
+        {
+            _countdownTimer.Dispose();
+            _countdownTimer = new Timer(TimeUp);
+            _countdownTimer.Change(_remainingTime[_currentPlayer.Value], TimeSpan.FromMilliseconds(-1));
+            _lastTimerStart = DateTime.Now;
+        }
+
+        private void TimeUp(object state)
+        {
+            _remainingTime[_currentPlayer.Value] = TimeSpan.Zero;
+            _currentPlayer = null;
+            _lastTimerStart = null;
+            _countdownTimer.Dispose();
+            _countdownTimer = new Timer(TimeUp);
+            _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        private void UpdatePlayerRemainingTime(Player player)
+        {
+            if (_timeControl.HasValue)
             {
-                _watches[player].Stop();
-                _timers[player].Stop();
-                _timers[player].Dispose();
+                if (_timeControl.Value == TimeControl.FISCHER)
+                    _remainingTime[player] += _delayTime - TimerElapsedTime;
 
-                _watches[otherPlayer].Start();
-                _timers[otherPlayer].Start();
-
-                _totalTimes[player] += _increments[player];
-                _timers[player] = new Timer(GetRemainingTime(player).TotalMilliseconds);
-                _timers[player].Elapsed += (sender, e) => Stop();
+                if (_timeControl.Value == TimeControl.BRONSTEIN || _timeControl.Value == TimeControl.DELAY)
+                    if (TimerElapsedTime > _delayTime)
+                        _remainingTime[player] += _delayTime - TimerElapsedTime;
             }
-        }
-
-        private TimeSpan GetRemainingTime(int player)
-        {
-            return GetRemainingTime(_totalTimes[player], _watches[player].Elapsed);
-        }
-
-        private TimeSpan GetRemainingTime(TimeSpan total, TimeSpan elapsed)
-        {
-            if (total - elapsed <= TimeSpan.Zero) return TimeSpan.Zero;
-            return total - elapsed;
+            else
+            {
+                _remainingTime[player] -= TimerElapsedTime;
+            }
         }
     }
 }
