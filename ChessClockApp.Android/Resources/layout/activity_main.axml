@@ -4,4 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+	<Button
+		android:text="0:00"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/playerTwoButtonClock" />
+	<Button
+		android:text="Reset"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/playerTwoButtonClock"
+		android:id="@+id/resetButton" />
+	<Button
+		android:text="0:00"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/resetButton"
+		android:id="@+id/playerOneButtonClock" />
 </RelativeLayout>

@@ -64,8 +64,18 @@ namespace ChessClockApp
             _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
+        public bool IsTimeUp()
+        {
+            foreach (var kvp in _remainingTime)
+                if (kvp.Value == TimeSpan.Zero)
+                    return true;
+            return false;
+        }
+
         private bool ChangePlayer(Player from)
         {
+            if (IsTimeUp()) return false;
+
             var otherPlayer = from == Player.ONE ? Player.TWO : Player.ONE;
             if (_currentPlayer == otherPlayer)
                 return false;

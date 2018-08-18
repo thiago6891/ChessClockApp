@@ -94,6 +94,12 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChessClockApp\ChessClockApp.csproj">
+      <Project>{9db9263d-933d-42eb-ba6a-186273a7e622}</Project>
+      <Name>ChessClockApp</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
     Other similar extension points exist, see Microsoft.Common.targets.

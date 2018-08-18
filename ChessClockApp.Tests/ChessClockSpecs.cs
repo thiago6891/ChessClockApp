@@ -172,5 +172,25 @@ namespace ChessClockApp.Tests
             Assert.AreEqual(gameTime, clock.GetRemainingTime(Player.ONE));
             Assert.AreEqual(gameTime, clock.GetRemainingTime(Player.TWO));
         }
+
+        [TestMethod]
+        public void PressingPlayerButtonsShouldHaveNoEffectAfterTimeUp()
+        {
+            var gameTime = GetRandomTimeMilliseconds(100, 200);
+            var clock = new NoDelayChessClock(gameTime);
+            var waitTime = GetRandomTimeMilliseconds(40, 60);
+
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.PressButton(Player.ONE);
+            Thread.Sleep(gameTime + _errorMargin);
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.PressButton(Player.ONE);
+            Thread.Sleep(waitTime);
+
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime, clock.GetRemainingTime(Player.ONE)));
+            Assert.AreEqual(TimeSpan.Zero, clock.GetRemainingTime(Player.TWO));
+        }
     }
 }
