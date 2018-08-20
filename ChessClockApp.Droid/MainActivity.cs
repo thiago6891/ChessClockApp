@@ -4,6 +4,7 @@ using Android.Support.V7.App;
 using Android.Widget;
 using System;
 using System.Timers;
+using AlertDialog = Android.App.AlertDialog;
 
 namespace ChessClockApp.Droid
 {
@@ -17,6 +18,7 @@ namespace ChessClockApp.Droid
         private ChessClock _clock;
         private Button _playerOneBtn;
         private Button _playerTwoBtn;
+        private AlertDialog _confirmResetDialog;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,7 +30,7 @@ namespace ChessClockApp.Droid
             _playerTwoBtn = FindViewById<Button>(Resource.Id.playerTwoButtonClock);
             var resetBtn = FindViewById<Button>(Resource.Id.resetButton);
 
-            var gameTime = TimeSpan.FromSeconds(5);
+            var gameTime = TimeSpan.FromMinutes(5);
             _clock = new NoDelayChessClock(gameTime);
 
             _playerOneBtn.Text = gameTime.ToString(TIME_FMT);
@@ -38,6 +40,12 @@ namespace ChessClockApp.Droid
             _playerOneBtn.Click += PlayerOneBtn_Click;
             _playerTwoBtn.Click += PlayerTwoBtn_Click;
             resetBtn.Click += ResetBtn_Click;
+
+            _confirmResetDialog = ((new AlertDialog.Builder(this))
+                .SetMessage(Resource.String.confirm_clock_reset)
+                .SetPositiveButton(Resource.String.yes, ConfirmClockReset)
+                .SetNegativeButton(Resource.String.no, (s, e) => { }))
+                .Create();
         }
 
         private void PlayerOneBtn_Click(object sender, EventArgs e)
@@ -56,7 +64,9 @@ namespace ChessClockApp.Droid
             _timer.Start();
         }
 
-        private void ResetBtn_Click(object sender, EventArgs e)
+        private void ResetBtn_Click(object sender, EventArgs e) => _confirmResetDialog.Show();
+
+        private void ConfirmClockReset(object sender, EventArgs e)
         {
             _clock.Reset();
             _playerOneBtn.Enabled = true;

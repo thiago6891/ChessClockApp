@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ChessClockApp.Droid</string>
     <string name="action_settings">Settings</string>
+    <string name="confirm_clock_reset">Reset The Clock?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
