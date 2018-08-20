@@ -4,21 +4,20 @@ using Android.Support.V7.App;
 using Android.Widget;
 using System;
 using System.Timers;
-using AlertDialog = Android.App.AlertDialog;
 
 namespace ChessClockApp.Droid
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : AppCompatActivity, ResetClockDialogFragment.IOnClockResetConfirmedListener
     {
         private const string TIME_FMT = @"mm\:ss";
 
         private readonly Timer _timer = new Timer(1000) { AutoReset = true, Enabled = false };
+        private readonly ResetClockDialogFragment _resetClockDialog = new ResetClockDialogFragment();
 
         private ChessClock _clock;
         private Button _playerOneBtn;
         private Button _playerTwoBtn;
-        private AlertDialog _confirmResetDialog;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -40,12 +39,6 @@ namespace ChessClockApp.Droid
             _playerOneBtn.Click += PlayerOneBtn_Click;
             _playerTwoBtn.Click += PlayerTwoBtn_Click;
             resetBtn.Click += ResetBtn_Click;
-
-            _confirmResetDialog = ((new AlertDialog.Builder(this))
-                .SetMessage(Resource.String.confirm_reset_question)
-                .SetPositiveButton(Resource.String.confirm_reset, ConfirmClockReset)
-                .SetNegativeButton(Resource.String.cancel, (s, e) => { }))
-                .Create();
         }
 
         private void PlayerOneBtn_Click(object sender, EventArgs e)
@@ -64,9 +57,9 @@ namespace ChessClockApp.Droid
             _timer.Start();
         }
 
-        private void ResetBtn_Click(object sender, EventArgs e) => _confirmResetDialog.Show();
+        private void ResetBtn_Click(object sender, EventArgs e) => _resetClockDialog.Show(FragmentManager, "");
 
-        private void ConfirmClockReset(object sender, EventArgs e)
+        public void OnClockResetConfirmed()
         {
             _clock.Reset();
             _playerOneBtn.Enabled = true;
