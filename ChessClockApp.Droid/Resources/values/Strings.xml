@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">ChessClockApp.Android</string>
+    <string name="app_name">ChessClockApp.Droid</string>
     <string name="action_settings">Settings</string>
 </resources>

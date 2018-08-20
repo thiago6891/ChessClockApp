@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("ChessClockApp.Android.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("ChessClockApp.Droid.Resource", IsApplication=true)]
 
-namespace ChessClockApp.Android
+namespace ChessClockApp.Droid
 {
 	
 	

@@ -5,7 +5,7 @@ using Android.Widget;
 using System;
 using System.Timers;
 
-namespace ChessClockApp.Android
+namespace ChessClockApp.Droid
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
