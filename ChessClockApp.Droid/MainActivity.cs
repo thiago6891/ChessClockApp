@@ -42,9 +42,9 @@ namespace ChessClockApp.Droid
             resetBtn.Click += ResetBtn_Click;
 
             _confirmResetDialog = ((new AlertDialog.Builder(this))
-                .SetMessage(Resource.String.confirm_clock_reset)
-                .SetPositiveButton(Resource.String.yes, ConfirmClockReset)
-                .SetNegativeButton(Resource.String.no, (s, e) => { }))
+                .SetMessage(Resource.String.confirm_reset_question)
+                .SetPositiveButton(Resource.String.confirm_reset, ConfirmClockReset)
+                .SetNegativeButton(Resource.String.cancel, (s, e) => { }))
                 .Create();
         }
 
