@@ -111,7 +111,21 @@ namespace ChessClockApp.Droid
 
         public void OnSaveButtonClicked()
         {
-            _clock = new NoDelayChessClock(_settingsDialog.GameTime);
+            switch (_settingsDialog.DelayType)
+            {
+                case Delay.None:
+                    _clock = new NoDelayChessClock(_settingsDialog.GameTime);
+                    break;
+                case Delay.Fischer:
+                    _clock = new FischerDelayChessClock(_settingsDialog.GameTime, _settingsDialog.DelayTime);
+                    break;
+                case Delay.Bronstein:
+                    _clock = new BronsteinDelayChessClock(_settingsDialog.GameTime, _settingsDialog.DelayTime);
+                    break;
+                case Delay.Normal:
+                    _clock = new NormalDelayChessClock(_settingsDialog.GameTime, _settingsDialog.DelayTime);
+                    break;
+            }
 
             _playerOneBtn.Text = GetFormattedTime(Player.ONE);
             _playerTwoBtn.Text = GetFormattedTime(Player.TWO);

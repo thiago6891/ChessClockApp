@@ -2429,6 +2429,9 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f08003d
 			public const int bottom = 2131230781;
 			
+			// aapt resource value: 0x7f0800b6
+			public const int bronsteinDelayButton = 2131230902;
+			
 			// aapt resource value: 0x7f080063
 			public const int buttonPanel = 2131230819;
 			
@@ -2480,6 +2483,12 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f080060
 			public const int default_activity_button = 2131230816;
 			
+			// aapt resource value: 0x7f0800b3
+			public const int delayRadioGroup = 2131230899;
+			
+			// aapt resource value: 0x7f0800b9
+			public const int delayTimeTextInput = 2131230905;
+			
 			// aapt resource value: 0x7f080094
 			public const int design_bottom_sheet = 2131230868;
 			
@@ -2530,6 +2539,9 @@ namespace ChessClockApp.Droid
 			
 			// aapt resource value: 0x7f080048
 			public const int fill_vertical = 2131230792;
+			
+			// aapt resource value: 0x7f0800b5
+			public const int fischerDelayButton = 2131230901;
 			
 			// aapt resource value: 0x7f080054
 			public const int @fixed = 2131230804;
@@ -2588,14 +2600,14 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f080061
 			public const int list_item = 2131230817;
 			
-			// aapt resource value: 0x7f0800b4
-			public const int masked = 2131230900;
+			// aapt resource value: 0x7f0800bc
+			public const int masked = 2131230908;
 			
 			// aapt resource value: 0x7f0800a3
 			public const int media_actions = 2131230883;
 			
-			// aapt resource value: 0x7f0800b2
-			public const int message = 2131230898;
+			// aapt resource value: 0x7f0800ba
+			public const int message = 2131230906;
 			
 			// aapt resource value: 0x7f080031
 			public const int middle = 2131230769;
@@ -2612,11 +2624,17 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f08003b
 			public const int never = 2131230779;
 			
+			// aapt resource value: 0x7f0800b4
+			public const int noDelayButton = 2131230900;
+			
 			// aapt resource value: 0x7f080022
 			public const int none = 2131230754;
 			
 			// aapt resource value: 0x7f08001e
 			public const int normal = 2131230750;
+			
+			// aapt resource value: 0x7f0800b7
+			public const int normalDelayButton = 2131230903;
 			
 			// aapt resource value: 0x7f0800ac
 			public const int notification_background = 2131230892;
@@ -2801,6 +2819,12 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f0800b0
 			public const int textView1 = 2131230896;
 			
+			// aapt resource value: 0x7f0800b2
+			public const int textView2 = 2131230898;
+			
+			// aapt resource value: 0x7f0800b8
+			public const int textView3 = 2131230904;
+			
 			// aapt resource value: 0x7f08009c
 			public const int text_input_password_toggle = 2131230876;
 			
@@ -2858,8 +2882,8 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f080016
 			public const int view_offset_helper = 2131230742;
 			
-			// aapt resource value: 0x7f0800b3
-			public const int visible = 2131230899;
+			// aapt resource value: 0x7f0800bb
+			public const int visible = 2131230907;
 			
 			// aapt resource value: 0x7f08003c
 			public const int withText = 2131230780;

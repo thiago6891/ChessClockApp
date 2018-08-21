@@ -15,4 +15,53 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@id/textView1"
 		android:id="@+id/gameTimeTextInput" />
+	<TextView
+		android:text="Delay/Increment"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/gameTimeTextInput"
+		android:id="@+id/textView2" />
+	<RadioGroup
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textView2"
+		android:id="@+id/delayRadioGroup">
+		<RadioButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+			android:text="None"
+			android:id="@+id/noDelayButton" />
+		<RadioButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Fischer"
+			android:id="@+id/fischerDelayButton" />
+		<RadioButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Bronstein"
+			android:id="@+id/bronsteinDelayButton" />
+		<RadioButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Normal Delay"
+			android:id="@+id/normalDelayButton" />
+	</RadioGroup>
+	<TextView
+		android:text="Delay/Increment Time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/delayRadioGroup"
+		android:id="@+id/textView3" />
+	<EditText
+		android:inputType="time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textView3"
+		android:id="@+id/delayTimeTextInput"
+		android:text="0:00:00"
+		android:enabled="false" />
 </RelativeLayout>
