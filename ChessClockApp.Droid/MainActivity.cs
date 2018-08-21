@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Views;
 using Android.Widget;
 using System;
 using System.Timers;
@@ -8,16 +9,20 @@ using System.Timers;
 namespace ChessClockApp.Droid
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, ResetClockDialogFragment.IOnClockResetConfirmedListener
+    public class MainActivity : 
+        AppCompatActivity, 
+        ResetClockDialogFragment.IOnClockResetConfirmedListener, 
+        SettingsDialogFragment.ISettingsButtonsListener
     {
-        private const string TIME_FMT = @"mm\:ss";
-
         private readonly Timer _timer = new Timer(1000) { AutoReset = true, Enabled = false };
         private readonly ResetClockDialogFragment _resetClockDialog = new ResetClockDialogFragment();
+        private readonly SettingsDialogFragment _settingsDialog = new SettingsDialogFragment(TimeSpan.FromMinutes(5));
 
         private ChessClock _clock;
         private Button _playerOneBtn;
         private Button _playerTwoBtn;
+        private Button _resetBtn;
+        private Button _settingsBtn;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -27,18 +32,21 @@ namespace ChessClockApp.Droid
 
             _playerOneBtn = FindViewById<Button>(Resource.Id.playerOneButtonClock);
             _playerTwoBtn = FindViewById<Button>(Resource.Id.playerTwoButtonClock);
-            var resetBtn = FindViewById<Button>(Resource.Id.resetButton);
+            _resetBtn = FindViewById<Button>(Resource.Id.resetButton);
+            _settingsBtn = FindViewById<Button>(Resource.Id.settingsButton);
+            
+            _clock = new NoDelayChessClock(_settingsDialog.GameTime);
 
-            var gameTime = TimeSpan.FromMinutes(5);
-            _clock = new NoDelayChessClock(gameTime);
-
-            _playerOneBtn.Text = gameTime.ToString(TIME_FMT);
-            _playerTwoBtn.Text = gameTime.ToString(TIME_FMT);
+            _playerOneBtn.Text = GetFormattedTime(Player.ONE);
+            _playerTwoBtn.Text = GetFormattedTime(Player.TWO);
 
             _timer.Elapsed += Timer_Elapsed;
             _playerOneBtn.Click += PlayerOneBtn_Click;
             _playerTwoBtn.Click += PlayerTwoBtn_Click;
-            resetBtn.Click += ResetBtn_Click;
+            _resetBtn.Click += ResetBtn_Click;
+            _settingsBtn.Click += SettingsBtn_Click;
+
+            _resetBtn.Visibility = ViewStates.Gone;
         }
 
         private void PlayerOneBtn_Click(object sender, EventArgs e)
@@ -46,6 +54,8 @@ namespace ChessClockApp.Droid
             _clock.PressButton(Player.ONE);
             _playerOneBtn.Enabled = false;
             _playerTwoBtn.Enabled = true;
+            _settingsBtn.Visibility = ViewStates.Gone;
+            _resetBtn.Visibility = ViewStates.Visible;
             _timer.Start();
         }
 
@@ -54,10 +64,39 @@ namespace ChessClockApp.Droid
             _clock.PressButton(Player.TWO);
             _playerTwoBtn.Enabled = false;
             _playerOneBtn.Enabled = true;
+            _settingsBtn.Visibility = ViewStates.Gone;
+            _resetBtn.Visibility = ViewStates.Visible;
             _timer.Start();
         }
 
         private void ResetBtn_Click(object sender, EventArgs e) => _resetClockDialog.Show(FragmentManager, "");
+
+        private void SettingsBtn_Click(object sender, EventArgs e)
+        {
+            _settingsDialog.Show(FragmentManager, "");
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e) => UpdateClock();
+
+        private void UpdateClock()
+        {
+            _playerOneBtn.Text = GetFormattedTime(Player.ONE);
+            _playerTwoBtn.Text = GetFormattedTime(Player.TWO);
+            if (_clock.IsTimeUp())
+            {
+                _playerOneBtn.Enabled = false;
+                _playerTwoBtn.Enabled = false;
+                _timer.Stop();
+            }
+        }
+
+        private string GetFormattedTime(Player player)
+        {
+            var time = _clock.GetRemainingTime(player);
+            if (time.TotalHours >= 1)
+                return time.ToString(@"hh\:mm\:ss");
+            return time.ToString(@"mm\:ss");
+        }
 
         public void OnClockResetConfirmed()
         {
@@ -66,20 +105,16 @@ namespace ChessClockApp.Droid
             _playerTwoBtn.Enabled = true;
             _timer.Stop();
             UpdateClock();
+            _settingsBtn.Visibility = ViewStates.Visible;
+            _resetBtn.Visibility = ViewStates.Gone;
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e) => UpdateClock();
-
-        private void UpdateClock()
+        public void OnSaveButtonClicked()
         {
-            _playerOneBtn.Text = _clock.GetRemainingTime(Player.ONE).ToString(TIME_FMT);
-            _playerTwoBtn.Text = _clock.GetRemainingTime(Player.TWO).ToString(TIME_FMT);
-            if (_clock.IsTimeUp())
-            {
-                _playerOneBtn.Enabled = false;
-                _playerTwoBtn.Enabled = false;
-                _timer.Stop();
-            }
+            _clock = new NoDelayChessClock(_settingsDialog.GameTime);
+
+            _playerOneBtn.Text = GetFormattedTime(Player.ONE);
+            _playerTwoBtn.Text = GetFormattedTime(Player.TWO);
         }
     }
 }
