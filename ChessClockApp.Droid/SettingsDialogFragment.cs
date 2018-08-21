@@ -30,6 +30,8 @@ namespace ChessClockApp.Droid
         public SettingsDialogFragment(TimeSpan gameTime) : base()
         {
             GameTime = gameTime;
+            DelayTime = TimeSpan.Zero;
+            DelayType = Delay.None;
         }
 
         public override Dialog OnCreateDialog(Bundle savedInstanceState)
@@ -40,12 +42,35 @@ namespace ChessClockApp.Droid
             _gameTimeInput.Text = GameTime.ToString();
 
             _delayTimeInput = view.FindViewById<EditText>(Resource.Id.delayTimeTextInput);
-            _delayRadioGroup = view.FindViewById<RadioGroup>(Resource.Id.delayRadioGroup);
+            _delayTimeInput.Text = DelayTime.ToString();
 
-            view.FindViewById<RadioButton>(Resource.Id.noDelayButton).Click += NoDelayButton_Click;
-            view.FindViewById<RadioButton>(Resource.Id.fischerDelayButton).Click += DelayButton_Click;
-            view.FindViewById<RadioButton>(Resource.Id.bronsteinDelayButton).Click += DelayButton_Click;
-            view.FindViewById<RadioButton>(Resource.Id.normalDelayButton).Click += DelayButton_Click;
+            _delayRadioGroup = view.FindViewById<RadioGroup>(Resource.Id.delayRadioGroup);
+            switch (DelayType)
+            {
+                case Delay.None:
+                    _delayRadioGroup.Check(Resource.Id.noDelayButton);
+                    EnableDelayInput(false);
+                    break;
+                case Delay.Fischer:
+                    _delayRadioGroup.Check(Resource.Id.fischerDelayButton);
+                    EnableDelayInput(true);
+                    break;
+                case Delay.Bronstein:
+                    _delayRadioGroup.Check(Resource.Id.bronsteinDelayButton);
+                    EnableDelayInput(true);
+                    break;
+                case Delay.Normal:
+                    _delayRadioGroup.Check(Resource.Id.normalDelayButton);
+                    EnableDelayInput(true);
+                    break;
+                default:
+                    break;
+            }
+
+            view.FindViewById<RadioButton>(Resource.Id.noDelayButton).Click += (s, e) => EnableDelayInput(false);
+            view.FindViewById<RadioButton>(Resource.Id.fischerDelayButton).Click += (s, e) => EnableDelayInput(true);
+            view.FindViewById<RadioButton>(Resource.Id.bronsteinDelayButton).Click += (s, e) => EnableDelayInput(true);
+            view.FindViewById<RadioButton>(Resource.Id.normalDelayButton).Click += (s, e) => EnableDelayInput(true);
 
             return ((new AlertDialog.Builder(Activity))
                 .SetView(view)
@@ -98,15 +123,7 @@ namespace ChessClockApp.Droid
             _listener.OnSaveButtonClicked();
         }
 
-        private void NoDelayButton_Click(object sender, EventArgs e)
-        {
-            _delayTimeInput.Enabled = false;
-        }
-
-        private void DelayButton_Click(object sender, EventArgs e)
-        {
-            _delayTimeInput.Enabled = true;
-        }
+        private void EnableDelayInput(bool enable) => _delayTimeInput.Enabled = enable;
 
         public override void OnAttach(Context context)
         {
