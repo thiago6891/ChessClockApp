@@ -8,8 +8,10 @@ namespace ChessClockApp
 
         protected override void UpdatePlayerRemainingTime(Player player)
         {
-            if (TimerElapsedTime > _delayTime)
-                _remainingTime[player] += _delayTime - TimerElapsedTime;
+            if (TimerElapsedTime != TimeSpan.Zero)
+                _remainingTime[player] -= TimerElapsedTime > _delayTime ? TimerElapsedTime : _delayTime;
+            var otherPlayer = player == Player.ONE ? Player.TWO : Player.ONE;
+            _remainingTime[otherPlayer] += _delayTime;
         }
     }
 }

@@ -90,8 +90,8 @@ namespace ChessClockApp.Tests
             var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
             clock.PressButton(Player.TWO);
             Thread.Sleep(waitTime);
-            clock.PressButton(Player.ONE);
             var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
+            clock.PressButton(Player.ONE);
 
             Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime + incrementTime, playerOneTimeLeft));
             Assert.AreEqual(gameTime, playerTwoTimeLeft);
@@ -128,14 +128,18 @@ namespace ChessClockApp.Tests
             var playerTwoWaitTime = delay + GetRandomTimeMilliseconds(50, 100);
 
             clock.PressButton(Player.TWO);
+            var playerOneTimeAtStart = clock.GetRemainingTime(Player.ONE);
             Thread.Sleep(playerOneWaitTime);
             clock.PressButton(Player.ONE);
+            var playerTwoTimeAtStart = clock.GetRemainingTime(Player.TWO);
             var playerOneTimeLeft = clock.GetRemainingTime(Player.ONE);
             Thread.Sleep(playerTwoWaitTime);
             clock.PressButton(Player.TWO);
             var playerTwoTimeLeft = clock.GetRemainingTime(Player.TWO);
 
+            Assert.IsTrue(IsWithinErrorMargin(gameTime + delay, playerOneTimeAtStart));
             Assert.IsTrue(IsWithinErrorMargin(gameTime, playerOneTimeLeft));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime + delay, playerTwoTimeAtStart));
             Assert.IsTrue(IsWithinErrorMargin(gameTime + delay - playerTwoWaitTime, playerTwoTimeLeft));
         }
 

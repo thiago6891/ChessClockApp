@@ -6,7 +6,11 @@ namespace ChessClockApp
     {
         public FischerDelayChessClock(TimeSpan gameTime, TimeSpan delayTime) : base(gameTime, delayTime) { }
 
-        protected override void UpdatePlayerRemainingTime(Player player) =>
-            _remainingTime[player] += _delayTime - TimerElapsedTime;
+        protected override void UpdatePlayerRemainingTime(Player player)
+        {
+            _remainingTime[player] -= TimerElapsedTime;
+            var otherPlayer = player == Player.ONE ? Player.TWO : Player.ONE;
+            _remainingTime[otherPlayer] += _delayTime;
+        }
     }
 }
