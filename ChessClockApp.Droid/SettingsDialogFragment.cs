@@ -27,9 +27,10 @@ namespace ChessClockApp.Droid
         public TimeSpan DelayTime { get; private set; }
         public Delay DelayType { get; private set; }
 
-        public SettingsDialogFragment(TimeSpan gameTime) : base()
+        public SettingsDialogFragment() : base()
         {
-            GameTime = gameTime;
+            // Default Settings
+            GameTime = TimeSpan.FromMinutes(5);
             DelayTime = TimeSpan.Zero;
             DelayType = Delay.None;
         }
@@ -74,8 +75,8 @@ namespace ChessClockApp.Droid
 
             return ((new AlertDialog.Builder(Activity))
                 .SetView(view)
-                .SetPositiveButton("Save", SaveButtonClick_Handler)
-                .SetNegativeButton(Resource.String.cancel, (s, e) => { Dialog.Cancel(); }))
+                .SetPositiveButton(Resource.String.save, SaveButtonClick_Handler)
+                .SetNegativeButton(Resource.String.cancel, (s, e) => Dialog.Cancel()))
                 .Create();
         }
 

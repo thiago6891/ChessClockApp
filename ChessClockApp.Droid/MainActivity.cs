@@ -16,7 +16,7 @@ namespace ChessClockApp.Droid
     {
         private readonly Timer _timer = new Timer(1000) { AutoReset = true, Enabled = false };
         private readonly ResetClockDialogFragment _resetClockDialog = new ResetClockDialogFragment();
-        private readonly SettingsDialogFragment _settingsDialog = new SettingsDialogFragment(TimeSpan.FromMinutes(5));
+        private readonly SettingsDialogFragment _settingsDialog = new SettingsDialogFragment();
 
         private ChessClock _clock;
         private Button _playerOneBtn;

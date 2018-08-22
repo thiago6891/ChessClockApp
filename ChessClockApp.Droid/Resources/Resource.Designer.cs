@@ -3294,6 +3294,9 @@ namespace ChessClockApp.Droid
 			// aapt resource value: 0x7f090025
 			public const int path_password_strike_through = 2131296293;
 			
+			// aapt resource value: 0x7f09002c
+			public const int save = 2131296300;
+			
 			// aapt resource value: 0x7f090011
 			public const int search_menu_title = 2131296273;
 			
