@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
@@ -8,7 +9,7 @@ using System.Timers;
 
 namespace ChessClockApp.Droid
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
+    [Activity(Theme = "@style/AppTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : 
         AppCompatActivity, 
         ResetClockDialogFragment.IOnClockResetConfirmedListener, 
