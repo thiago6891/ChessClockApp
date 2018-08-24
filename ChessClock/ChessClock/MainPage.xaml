@@ -11,7 +11,7 @@
                             BackgroundColor="White">
                 <Image AbsoluteLayout.LayoutFlags="All" 
                        AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
-                       Source="reset.png" IsVisible="False" IsEnabled="False" />
+                       Source="reset.png" />
                 <Image AbsoluteLayout.LayoutFlags="All" 
                        AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
                        Source="settings.png" />
