@@ -3,12 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ChessClock"
              x:Class="ChessClock.MainPage">
-
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
-
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <Button AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1, .425" Rotation="180" />
+            <AbsoluteLayout AbsoluteLayout.LayoutFlags="All" 
+                            AbsoluteLayout.LayoutBounds="0, .5, 1, .15" 
+                            BackgroundColor="White">
+                <Image AbsoluteLayout.LayoutFlags="All" 
+                       AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
+                       Source="reset.png" IsVisible="False" IsEnabled="False" />
+                <Image AbsoluteLayout.LayoutFlags="All" 
+                       AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
+                       Source="settings.png" />
+            </AbsoluteLayout>
+            <Button AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 1, 1, .425" />
+        </AbsoluteLayout>
+    </ContentPage.Content>
 </ContentPage>
