@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessClockApp", "ChessClock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessClockApp.Tests", "ChessClockApp.Tests\ChessClockApp.Tests.csproj", "{D245BEBC-3736-420D-83DF-F29DE99F04BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessClockApp.Droid", "ChessClockApp.Droid\ChessClockApp.Droid.csproj", "{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +21,6 @@ Global
 		{D245BEBC-3736-420D-83DF-F29DE99F04BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D245BEBC-3736-420D-83DF-F29DE99F04BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D245BEBC-3736-420D-83DF-F29DE99F04BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18A9E54F-1AE4-4C1D-B938-89ABE9B6A712}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
