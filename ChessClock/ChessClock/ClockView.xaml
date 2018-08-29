@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ChessClock"
-             x:Class="ChessClock.MainPage">
+             x:Class="ChessClock.ClockView">
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
@@ -27,11 +27,19 @@
                 <Image IsVisible="{Binding ResetButtonEnabled}"
                        AbsoluteLayout.LayoutFlags="All" 
                        AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
-                       Source="reset.png" />
+                       Source="reset.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ResetButton_Tapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
                 <Image IsVisible="{Binding SettingsButtonEnabled}"
                        AbsoluteLayout.LayoutFlags="All" 
                        AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
-                       Source="settings.png" />
+                       Source="settings.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="SettingsButton_Tapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
             </AbsoluteLayout>
             <Button Text="{Binding ClockTwoTime, Converter={StaticResource TimeSpanToStringConverter}}"
                     IsEnabled="{Binding ButtonTwoEnabled}"

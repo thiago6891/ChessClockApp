@@ -11,7 +11,7 @@ namespace ChessClock
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new ClockView();
         }
 
         protected override void OnStart()
