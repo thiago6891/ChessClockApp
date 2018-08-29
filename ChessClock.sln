@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessClock.Android", "ChessClock\ChessClock.Android\ChessClock.Android.csproj", "{6FA9EA9D-F923-4530-BB96-52C1D0B9F090}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessClock", "ChessClock\ChessClock\ChessClock.csproj", "{9C528016-5F78-48DB-A923-B8B43E5EBF6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessClock", "ChessClock\ChessClock\ChessClock.csproj", "{9C528016-5F78-48DB-A923-B8B43E5EBF6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessClock.Tests", "ChessClock.Tests\ChessClock.Tests.csproj", "{640012BF-7DA6-46A3-BC05-218E28F23C01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{9C528016-5F78-48DB-A923-B8B43E5EBF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C528016-5F78-48DB-A923-B8B43E5EBF6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C528016-5F78-48DB-A923-B8B43E5EBF6C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{640012BF-7DA6-46A3-BC05-218E28F23C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{640012BF-7DA6-46A3-BC05-218E28F23C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{640012BF-7DA6-46A3-BC05-218E28F23C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{640012BF-7DA6-46A3-BC05-218E28F23C01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

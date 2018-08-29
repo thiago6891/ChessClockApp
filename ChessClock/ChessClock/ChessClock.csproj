@@ -14,13 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ClockView.xaml.cs">
+    <Compile Update="Views\ClockView.xaml.cs">
       <DependentUpon>ClockView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="SettingsView.xaml">
+    <EmbeddedResource Update="Views\SettingsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
