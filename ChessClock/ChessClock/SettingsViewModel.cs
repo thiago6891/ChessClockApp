@@ -1,20 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace ChessClock
 {
-    public enum Delay
-    {
-        None,
-        Fischer,
-        Bronstein,
-        Normal
-    }
-
     public class SettingsViewModel : ViewModelBase
     {
+        private readonly List<string> _delayTypes = new List<string> { "None", "Fischer", "Bronstein", "Normal" };
+        public IList<string> DelayTypes => _delayTypes.AsReadOnly();
+
         private TimeSpan _gameTime;
         private TimeSpan _delayTime;
-        private Delay _delayType;
+        private string _selectedDelayType;
+        private bool _delayEntryEnabled;
 
         public TimeSpan GameTime
         {
@@ -44,25 +43,48 @@ namespace ChessClock
             }
         }
 
-        public Delay DelayType
+        public string SelectedDelayType
         {
             get
             {
-                return _delayType;
+                return _selectedDelayType;
             }
             set
             {
-                if (_delayType == value) return;
-                _delayType = value;
-                RaisePropertyChanged(() => DelayType);
+                if (_selectedDelayType == value) return;
+                _selectedDelayType = value;
+                DelayEntryEnabled = value != _delayTypes[0];
+                RaisePropertyChanged(() => SelectedDelayType);
             }
+        }
+
+        public bool DelayEntryEnabled
+        {
+            get
+            {
+                return _delayEntryEnabled;
+            }
+            private set
+            {
+                if (_delayEntryEnabled == value) return;
+                _delayEntryEnabled = value;
+                RaisePropertyChanged(() => DelayEntryEnabled);
+            }
+        }
+
+        public ICommand SaveCommand => new Command(Save);
+        private void Save()
+        {
+            // TODO: implement save
+            throw new NotImplementedException();
         }
 
         public SettingsViewModel()
         {
-            GameTime = TimeSpan.FromMinutes(5);
-            DelayType = Delay.None;
-            DelayTime = TimeSpan.Zero;
+            _gameTime = TimeSpan.FromMinutes(5);
+            _selectedDelayType = _delayTypes[0];
+            _delayTime = TimeSpan.Zero;
+            _delayEntryEnabled = false;
         }
     }
 }
