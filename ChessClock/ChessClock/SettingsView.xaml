@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChessClock.SettingsView">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Game Time" />
+            <Entry />
+            <Label Text="Delay Type" />
+            <Picker Title="Select delay type" SelectedItem="None">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>None</x:String>
+                        <x:String>Fischer</x:String>
+                        <x:String>Bronstein</x:String>
+                        <x:String>Normal</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Label Text="Delay Time" />
+            <Entry IsEnabled="False" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

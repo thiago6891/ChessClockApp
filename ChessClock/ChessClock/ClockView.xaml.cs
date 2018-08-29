@@ -18,7 +18,7 @@ namespace ChessClock
 
         private void SettingsButton_Tapped(object sender, EventArgs e)
         {
-            // TODO: implement navigation
+            Navigation.PushModalAsync(new SettingsView(), true);
         }
     }
 }
