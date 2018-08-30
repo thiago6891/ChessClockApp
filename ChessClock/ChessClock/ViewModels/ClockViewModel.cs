@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -6,6 +7,10 @@ namespace ChessClock
 {
     public class ClockViewModel : ViewModelBase
     {
+        private const double CLOCK_REFRESH_RATE = 33.3;
+
+        private ChessClock _clock;
+
         private TimeSpan _clockOneTime;
         private TimeSpan _clockTwoTime;
         private bool _buttonOneEnabled;
@@ -86,33 +91,47 @@ namespace ChessClock
         {
             ButtonOneEnabled = false;
             ButtonTwoEnabled = true;
-            // TODO: implement the proper clock actions (in the model)
+            ResetButtonEnabled = true;
+            SettingsButtonEnabled = false;
+            _clock.PressButton(Player.ONE);
         }
 
         private void ButtonTwoClick()
         {
             ButtonOneEnabled = true;
             ButtonTwoEnabled = false;
-            // TODO: implement the proper clock actions (in the model)
+            ResetButtonEnabled = true;
+            SettingsButtonEnabled = false;
+            _clock.PressButton(Player.TWO);
         }
 
         public void Reset()
         {
             ButtonOneEnabled = true;
             ButtonTwoEnabled = true;
-            // TODO: implement proper actions
+            ResetButtonEnabled = false;
+            SettingsButtonEnabled = true;
+            _clock.Reset();
         }
 
         public ClockViewModel()
         {
-            // TODO: Remove this and get the real time from the model
-            ClockOneTime = TimeSpan.FromMinutes(1.1);
-            ClockTwoTime = TimeSpan.FromSeconds(60 * 60 + 10);
-            
+            _clock = new NoDelayChessClock(TimeSpan.FromSeconds(10));
+
+            ClockOneTime = _clock.GetRemainingTime(Player.ONE);
+            ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
             ButtonOneEnabled = true;
             ButtonTwoEnabled = true;
             ResetButtonEnabled = false;
             SettingsButtonEnabled = true;
+
+            var timer = new Timer(CLOCK_REFRESH_RATE);
+            timer.Elapsed += (s, e) =>
+            {
+                ClockOneTime = _clock.GetRemainingTime(Player.ONE);
+                ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
+            };
+            timer.Start();
         }
     }
 }
