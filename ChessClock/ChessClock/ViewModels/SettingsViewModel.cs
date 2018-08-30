@@ -78,11 +78,15 @@ namespace ChessClock
             }
         }
 
-        public ICommand SaveCommand => new Command(Save);
-        private void Save()
+        public void Save() => MessagingCenter.Send(this, "Settings_Saved", GetSettings());
+
+        private ClockSettings GetSettings()
         {
-            // TODO: implement save
-            throw new NotImplementedException();
+            var delay = ClockSettings.DelayType.None;
+            if (_selectedDelayType == DelayTypes[1]) delay = ClockSettings.DelayType.Fischer;
+            else if (_selectedDelayType == DelayTypes[2]) delay = ClockSettings.DelayType.Bronstein;
+            else if (_selectedDelayType == DelayTypes[3]) delay = ClockSettings.DelayType.Normal;
+            return new ClockSettings(GameTime, delay, DelayTime);
         }
 
         public SettingsViewModel()

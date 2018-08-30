@@ -132,6 +132,27 @@ namespace ChessClock
                 ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
             };
             timer.Start();
+
+            MessagingCenter.Subscribe<SettingsViewModel, ClockSettings>(this, "Settings_Saved", SettingsChanged);
+        }
+
+        private void SettingsChanged(SettingsViewModel sender, ClockSettings settings)
+        {
+            switch (settings.Delay)
+            {
+                case ClockSettings.DelayType.None:
+                    _clock = new NoDelayChessClock(settings.GameTime);
+                    break;
+                case ClockSettings.DelayType.Fischer:
+                    _clock = new FischerDelayChessClock(settings.GameTime, settings.DelayTime);
+                    break;
+                case ClockSettings.DelayType.Bronstein:
+                    _clock = new BronsteinDelayChessClock(settings.GameTime, settings.DelayTime);
+                    break;
+                case ClockSettings.DelayType.Normal:
+                    _clock = new NormalDelayChessClock(settings.GameTime, settings.DelayTime);
+                    break;
+            }
         }
 
         public ClockSettings GetSettings() => _clock.GetSettings();

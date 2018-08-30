@@ -17,6 +17,14 @@ namespace ChessClock
 			InitializeComponent ();
 		}
 
-        private void CancelButton_Clicked(object sender, EventArgs e) => Navigation.PopModalAsync(true);
+        private void SaveButton_Clicked(object sender, EventArgs e)
+        {
+            ((SettingsViewModel)BindingContext).Save();
+            GoBackOnePage();
+        }
+
+        private void CancelButton_Clicked(object sender, EventArgs e) => GoBackOnePage();
+
+        private void GoBackOnePage() => Navigation.PopModalAsync(true);
     }
 }
