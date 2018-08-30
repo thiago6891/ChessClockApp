@@ -17,6 +17,7 @@
             <Label Text="Delay Time" />
             <Entry Text="{Binding DelayTime, StringFormat='{0:mm\\:ss}'}" IsEnabled="{Binding DelayEntryEnabled}" />
             <Button Text="Save" Command="{Binding SaveCommand}" />
+            <Button Text="Cancel" Clicked="CancelButton_Clicked" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
