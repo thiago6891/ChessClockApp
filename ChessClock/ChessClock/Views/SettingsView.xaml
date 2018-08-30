@@ -11,7 +11,9 @@
             <Label Text="Game Time" />
             <Entry Text="{Binding GameTime, StringFormat='{0:mm\\:ss}'}" />
             <Label Text="Delay Type" />
-            <Picker Title="Select delay type" ItemsSource="{Binding DelayTypes}" SelectedItem="{Binding SelectedDelayType}" />
+            <Picker Title="Select delay type" 
+                    ItemsSource="{Binding Source={x:Static local:SettingsViewModel.DelayTypes}}" 
+                    SelectedItem="{Binding SelectedDelayType}" />
             <Label Text="Delay Time" />
             <Entry Text="{Binding DelayTime, StringFormat='{0:mm\\:ss}'}" IsEnabled="{Binding DelayEntryEnabled}" />
             <Button Text="Save" Command="{Binding SaveCommand}" />
