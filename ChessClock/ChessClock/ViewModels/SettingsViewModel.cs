@@ -7,7 +7,13 @@ namespace ChessClock
 {
     public class SettingsViewModel : ViewModelBase
     {
-        private static readonly List<string> _delayTypes = new List<string> { "None", "Fischer", "Bronstein", "Normal" };
+        private static readonly List<string> _delayTypes = new List<string>
+        {
+            "None",
+            "Fischer",
+            "Bronstein",
+            "Normal"
+        };
         public static IList<string> DelayTypes => _delayTypes.AsReadOnly();
 
         private TimeSpan _gameTime;
@@ -77,6 +83,34 @@ namespace ChessClock
         {
             // TODO: implement save
             throw new NotImplementedException();
+        }
+
+        public SettingsViewModel()
+            : this(new ClockSettings(TimeSpan.Zero, ClockSettings.DelayType.None, TimeSpan.Zero)) { }
+
+        public SettingsViewModel(ClockSettings settings)
+        {
+            _gameTime = settings.GameTime;
+            _delayTime = settings.DelayTime;
+            switch (settings.Delay)
+            {
+                case ClockSettings.DelayType.None:
+                    _selectedDelayType = DelayTypes[0];
+                    _delayEntryEnabled = false;
+                    break;
+                case ClockSettings.DelayType.Fischer:
+                    _selectedDelayType = DelayTypes[1];
+                    _delayEntryEnabled = true;
+                    break;
+                case ClockSettings.DelayType.Bronstein:
+                    _selectedDelayType = DelayTypes[2];
+                    _delayEntryEnabled = true;
+                    break;
+                case ClockSettings.DelayType.Normal:
+                    _selectedDelayType = DelayTypes[3];
+                    _delayEntryEnabled = true;
+                    break;
+            }
         }
     }
 }

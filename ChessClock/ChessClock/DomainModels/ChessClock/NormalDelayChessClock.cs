@@ -6,6 +6,11 @@ namespace ChessClock
     {
         public NormalDelayChessClock(TimeSpan gameTime, TimeSpan delayTime) : base(gameTime, delayTime) { }
 
+        public override ClockSettings GetSettings()
+        {
+            return new ClockSettings(_gameTime, ClockSettings.DelayType.Normal, _delayTime);
+        }
+
         protected override void UpdatePlayerRemainingTime(Player player)
         {
             if (TimerElapsedTime != TimeSpan.Zero)

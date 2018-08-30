@@ -10,6 +10,11 @@ namespace ChessClock
             _remainingTime[Player.TWO] += _delayTime;
         }
 
+        public override ClockSettings GetSettings()
+        {
+            return new ClockSettings(_gameTime, ClockSettings.DelayType.Bronstein, _delayTime);
+        }
+
         protected override void UpdatePlayerRemainingTime(Player player)
         {
             if (TimerElapsedTime > _delayTime)

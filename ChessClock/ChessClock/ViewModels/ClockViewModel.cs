@@ -133,5 +133,7 @@ namespace ChessClock
             };
             timer.Start();
         }
+
+        public ClockSettings GetSettings() => _clock.GetSettings();
     }
 }

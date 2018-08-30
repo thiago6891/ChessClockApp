@@ -12,7 +12,7 @@ namespace ChessClock
 
     public abstract class ChessClock : IDisposable
     {
-        private readonly TimeSpan _gameTime;
+        protected readonly TimeSpan _gameTime;
 
         private Timer _countdownTimer;
         private DateTime? _lastTimerStart;
@@ -104,5 +104,6 @@ namespace ChessClock
 
         public void Dispose() => _countdownTimer.Dispose();
         protected abstract void UpdatePlayerRemainingTime(Player player);
+        public abstract ClockSettings GetSettings();
     }
 }
