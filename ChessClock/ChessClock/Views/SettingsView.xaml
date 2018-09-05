@@ -3,19 +3,85 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ChessClock"
              x:Class="ChessClock.SettingsView">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:IntToStringConverter x:Key="IntToStringConverter" />
+            <local:IntListToStringListConverter x:Key="IntListToStringListConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.BindingContext>
         <local:SettingsViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Game Time" />
-            <Entry Text="{Binding GameTime}" />
-            <Label Text="Delay Type" />
-            <Picker Title="Select delay type" 
+            <!-- Game Time -->
+            <Label Text="Game Time" HorizontalTextAlignment="Center" FontSize="Medium" />
+            <AbsoluteLayout>
+                <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, .33, 1"
+                        ItemsSource="{Binding HoursPickerItems, Converter={StaticResource IntListToStringListConverter}}"
+                        SelectedItem="{Binding GameTimeHours, Converter={StaticResource IntToStringConverter}}"
+                        HorizontalOptions="Center" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".31, 0, .1, 1" 
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text=":" />
+                <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".5, 0, .33, 1" 
+                        ItemsSource="{Binding MinutesPickerItems, Converter={StaticResource IntListToStringListConverter}}"
+                        SelectedItem="{Binding GameTimeMinutes, Converter={StaticResource IntToStringConverter}}"
+                        HorizontalOptions="Center" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".68, 0, .1, 1" 
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text=":" />
+                <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1, 0, .33, 1" 
+                        ItemsSource="{Binding SecondsPickerItems, Converter={StaticResource IntListToStringListConverter}}"
+                        SelectedItem="{Binding GameTimeSeconds, Converter={StaticResource IntToStringConverter}}"
+                        HorizontalOptions="Center" />
+            </AbsoluteLayout>
+            <AbsoluteLayout>
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, .33, 1" 
+                       HorizontalTextAlignment="Center" Text="hours" FontSize="Micro" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".5, 0, .33, 1"
+                       HorizontalTextAlignment="Center" Text="minutes" FontSize="Micro" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1, 0, .33, 1"
+                       HorizontalTextAlignment="Center" Text="seconds" FontSize="Micro" />
+            </AbsoluteLayout>
+            
+            <!-- Delay Type -->
+            <Label Text="Delay Type" HorizontalTextAlignment="Center" FontSize="Medium" />
+            <Picker Title="Select delay type" HorizontalOptions="Center" FontSize="Small"
                     ItemsSource="{Binding Source={x:Static local:SettingsViewModel.DelayTypes}}" 
                     SelectedItem="{Binding SelectedDelayType}" />
-            <Label Text="Delay Time" />
-            <Entry Text="{Binding DelayTime}" IsEnabled="{Binding DelayEntryEnabled}" />
+            
+            <!-- Delay Time -->
+            <Label Text="Delay Time" HorizontalTextAlignment="Center" FontSize="Medium" 
+                   IsEnabled="{Binding DelayEntryEnabled}" />
+            <AbsoluteLayout>
+                <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, .33, 1"
+                        ItemsSource="{Binding HoursPickerItems, Converter={StaticResource IntListToStringListConverter}}"
+                        SelectedItem="{Binding DelayTimeHours, Converter={StaticResource IntToStringConverter}}"
+                        HorizontalOptions="Center" IsEnabled="{Binding DelayEntryEnabled}" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".31, 0, .1, 1" 
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text=":" />
+                <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".5, 0, .33, 1" 
+                        ItemsSource="{Binding MinutesPickerItems, Converter={StaticResource IntListToStringListConverter}}"
+                        SelectedItem="{Binding DelayTimeMinutes, Converter={StaticResource IntToStringConverter}}"
+                        HorizontalOptions="Center" IsEnabled="{Binding DelayEntryEnabled}" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".68, 0, .1, 1" 
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text=":" />
+                <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1, 0, .33, 1" 
+                        ItemsSource="{Binding SecondsPickerItems, Converter={StaticResource IntListToStringListConverter}}"
+                        SelectedItem="{Binding DelayTimeSeconds, Converter={StaticResource IntToStringConverter}}"
+                        HorizontalOptions="Center" IsEnabled="{Binding DelayEntryEnabled}" />
+            </AbsoluteLayout>
+            <AbsoluteLayout>
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, .33, 1" 
+                       HorizontalTextAlignment="Center" Text="hours" FontSize="Micro"
+                       IsEnabled="{Binding DelayEntryEnabled}" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds=".5, 0, .33, 1"
+                       HorizontalTextAlignment="Center" Text="minutes" FontSize="Micro"
+                       IsEnabled="{Binding DelayEntryEnabled}" />
+                <Label AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1, 0, .33, 1"
+                       HorizontalTextAlignment="Center" Text="seconds" FontSize="Micro"
+                       IsEnabled="{Binding DelayEntryEnabled}" />
+            </AbsoluteLayout>
+            
             <Button Text="Save" Clicked="SaveButton_Clicked" />
             <Button Text="Cancel" Clicked="CancelButton_Clicked" />
         </StackLayout>

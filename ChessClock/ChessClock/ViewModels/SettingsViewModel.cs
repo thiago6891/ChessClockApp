@@ -15,36 +15,100 @@ namespace ChessClock
         };
         public static IList<string> DelayTypes => _delayTypes.AsReadOnly();
 
+        private readonly List<int> _hoursPickerItems;
+        private readonly List<int> _minutesPickerItems;
+        private readonly List<int> _secondsPickerItems;
+
         private TimeSpan _gameTime;
         private TimeSpan _delayTime;
         private string _selectedDelayType;
         private bool _delayEntryEnabled;
 
-        public TimeSpan GameTime
+        public IList<int> HoursPickerItems => _hoursPickerItems.AsReadOnly();
+        public IList<int> MinutesPickerItems => _minutesPickerItems.AsReadOnly();
+        public IList<int> SecondsPickerItems => _secondsPickerItems.AsReadOnly();
+
+        public int GameTimeHours
         {
             get
             {
-                return _gameTime;
+                return _gameTime.Hours;
             }
             set
             {
-                if (_gameTime == value) return;
-                _gameTime = value;
-                RaisePropertyChanged(() => GameTime);
+                if (_gameTime.Hours == value) return;
+                _gameTime = new TimeSpan(value, _gameTime.Minutes, _gameTime.Seconds);
+                RaisePropertyChanged(() => GameTimeHours);
             }
         }
 
-        public TimeSpan DelayTime
+        public int GameTimeMinutes
         {
             get
             {
-                return _delayTime;
+                return _gameTime.Minutes;
             }
             set
             {
-                if (_delayTime == value) return;
-                _delayTime = value;
-                RaisePropertyChanged(() => DelayTime);
+                if (_gameTime.Minutes == value) return;
+                _gameTime = new TimeSpan(_gameTime.Hours, value, _gameTime.Seconds);
+                RaisePropertyChanged(() => GameTimeMinutes);
+            }
+        }
+
+        public int GameTimeSeconds
+        {
+            get
+            {
+                return _gameTime.Seconds;
+            }
+            set
+            {
+                if (_gameTime.Seconds == value) return;
+                _gameTime = new TimeSpan(_gameTime.Hours, _gameTime.Minutes, value);
+                RaisePropertyChanged(() => GameTimeSeconds);
+            }
+        }
+
+        public int DelayTimeHours
+        {
+            get
+            {
+                return _delayTime.Hours;
+            }
+            set
+            {
+                if (_delayTime.Hours == value) return;
+                _delayTime = new TimeSpan(value, _delayTime.Minutes, _delayTime.Seconds);
+                RaisePropertyChanged(() => DelayTimeHours);
+            }
+        }
+
+        public int DelayTimeMinutes
+        {
+            get
+            {
+                return _delayTime.Minutes;
+            }
+            set
+            {
+                if (_delayTime.Minutes == value) return;
+                _delayTime = new TimeSpan(_delayTime.Hours, value, _delayTime.Seconds);
+                RaisePropertyChanged(() => DelayTimeMinutes);
+            }
+        }
+
+        public int DelayTimeSeconds
+        {
+            get
+            {
+                return _delayTime.Seconds;
+            }
+            set
+            {
+                if (_delayTime.Seconds == value) return;
+                _delayTime = new TimeSpan(_delayTime.Hours, _delayTime.Minutes, value);
+                RaisePropertyChanged(() => DelayTimeSeconds);
             }
         }
 
@@ -85,7 +149,7 @@ namespace ChessClock
             if (_selectedDelayType == DelayTypes[1]) delay = ClockSettings.DelayType.Fischer;
             else if (_selectedDelayType == DelayTypes[2]) delay = ClockSettings.DelayType.Bronstein;
             else if (_selectedDelayType == DelayTypes[3]) delay = ClockSettings.DelayType.Normal;
-            return new ClockSettings(GameTime, delay, DelayTime);
+            return new ClockSettings(_gameTime, delay, _delayTime);
         }
 
         public SettingsViewModel()
@@ -113,6 +177,17 @@ namespace ChessClock
                     _selectedDelayType = DelayTypes[3];
                     _delayEntryEnabled = true;
                     break;
+            }
+
+            _hoursPickerItems = new List<int>();
+            for (int i = 0; i <= 10; i++) _hoursPickerItems.Add(i);
+
+            _minutesPickerItems = new List<int>();
+            _secondsPickerItems = new List<int>();
+            for (int i = 0; i <= 59; i++)
+            {
+                _minutesPickerItems.Add(i);
+                _secondsPickerItems.Add(i);
             }
         }
     }

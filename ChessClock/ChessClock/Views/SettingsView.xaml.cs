@@ -7,9 +7,9 @@ namespace ChessClock
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class SettingsView : ContentPage
 	{
-		public SettingsView ()
+		public SettingsView()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
 
         private void SaveButton_Clicked(object sender, EventArgs e)

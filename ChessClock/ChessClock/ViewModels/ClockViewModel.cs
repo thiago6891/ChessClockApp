@@ -116,7 +116,7 @@ namespace ChessClock
 
         public ClockViewModel()
         {
-            _clock = new NoDelayChessClock(TimeSpan.FromSeconds(10));
+            _clock = new NoDelayChessClock(TimeSpan.FromMinutes(5));
 
             ClockOneTime = _clock.GetRemainingTime(Player.ONE);
             ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
