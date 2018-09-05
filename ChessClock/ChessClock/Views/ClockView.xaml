@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ChessClock"
+             x:Class="ChessClock.ClockView">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <local:ClockViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <Button Text="{Binding ClockOneTime, Converter={StaticResource TimeSpanToStringConverter}}"
+                    IsEnabled="{Binding ButtonOneEnabled}"
+                    Command="{Binding ButtonOneClickCommand}"
+                    FontSize="Large"
+                    FontAttributes="Bold"
+                    AbsoluteLayout.LayoutFlags="All" 
+                    AbsoluteLayout.LayoutBounds="0, 0, 1, .425" 
+                    Rotation="180" />
+            <AbsoluteLayout AbsoluteLayout.LayoutFlags="All" 
+                            AbsoluteLayout.LayoutBounds="0, .5, 1, .15" 
+                            BackgroundColor="White">
+                <Image IsVisible="{Binding ResetButtonEnabled}"
+                       AbsoluteLayout.LayoutFlags="All" 
+                       AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
+                       Source="reset.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ResetButton_Tapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image IsVisible="{Binding SettingsButtonEnabled}"
+                       AbsoluteLayout.LayoutFlags="All" 
+                       AbsoluteLayout.LayoutBounds=".5, .5, .5, 1" 
+                       Source="settings.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="SettingsButton_Tapped" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </AbsoluteLayout>
+            <Button Text="{Binding ClockTwoTime, Converter={StaticResource TimeSpanToStringConverter}}"
+                    IsEnabled="{Binding ButtonTwoEnabled}"
+                    Command="{Binding ButtonTwoClickCommand}"
+                    FontSize="Large"
+                    FontAttributes="Bold"
+                    AbsoluteLayout.LayoutFlags="All" 
+                    AbsoluteLayout.LayoutBounds="0, 1, 1, .425" />
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
