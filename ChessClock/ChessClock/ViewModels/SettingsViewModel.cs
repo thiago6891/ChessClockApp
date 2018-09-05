@@ -38,7 +38,7 @@ namespace ChessClock
             {
                 if (_gameTime.Hours == value) return;
                 _gameTime = new TimeSpan(value, _gameTime.Minutes, _gameTime.Seconds);
-                RaisePropertyChanged(() => GameTimeHours);
+                OnPropertyChanged(nameof(GameTimeHours));
             }
         }
 
@@ -52,7 +52,7 @@ namespace ChessClock
             {
                 if (_gameTime.Minutes == value) return;
                 _gameTime = new TimeSpan(_gameTime.Hours, value, _gameTime.Seconds);
-                RaisePropertyChanged(() => GameTimeMinutes);
+                OnPropertyChanged(nameof(GameTimeMinutes));
             }
         }
 
@@ -66,7 +66,7 @@ namespace ChessClock
             {
                 if (_gameTime.Seconds == value) return;
                 _gameTime = new TimeSpan(_gameTime.Hours, _gameTime.Minutes, value);
-                RaisePropertyChanged(() => GameTimeSeconds);
+                OnPropertyChanged(nameof(GameTimeSeconds));
             }
         }
 
@@ -80,7 +80,7 @@ namespace ChessClock
             {
                 if (_delayTime.Hours == value) return;
                 _delayTime = new TimeSpan(value, _delayTime.Minutes, _delayTime.Seconds);
-                RaisePropertyChanged(() => DelayTimeHours);
+                OnPropertyChanged(nameof(DelayTimeHours));
             }
         }
 
@@ -94,7 +94,7 @@ namespace ChessClock
             {
                 if (_delayTime.Minutes == value) return;
                 _delayTime = new TimeSpan(_delayTime.Hours, value, _delayTime.Seconds);
-                RaisePropertyChanged(() => DelayTimeMinutes);
+                OnPropertyChanged(nameof(DelayTimeMinutes));
             }
         }
 
@@ -108,7 +108,7 @@ namespace ChessClock
             {
                 if (_delayTime.Seconds == value) return;
                 _delayTime = new TimeSpan(_delayTime.Hours, _delayTime.Minutes, value);
-                RaisePropertyChanged(() => DelayTimeSeconds);
+                OnPropertyChanged(nameof(DelayTimeSeconds));
             }
         }
 
@@ -123,7 +123,7 @@ namespace ChessClock
                 if (_selectedDelayType == value) return;
                 _selectedDelayType = value;
                 DelayEntryEnabled = value != _delayTypes[0];
-                RaisePropertyChanged(() => SelectedDelayType);
+                OnPropertyChanged(nameof(SelectedDelayType));
             }
         }
 
@@ -137,7 +137,7 @@ namespace ChessClock
             {
                 if (_delayEntryEnabled == value) return;
                 _delayEntryEnabled = value;
-                RaisePropertyChanged(() => DelayEntryEnabled);
+                OnPropertyChanged(nameof(DelayEntryEnabled));
             }
         }
 

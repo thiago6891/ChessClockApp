@@ -36,7 +36,7 @@ namespace ChessClock
                 {
                     ButtonOneColor = Color.Default;
                 }
-                RaisePropertyChanged(() => ClockOneTime);
+                OnPropertyChanged(nameof(ClockOneTime));
             }
         }
 
@@ -56,7 +56,7 @@ namespace ChessClock
                 {
                     ButtonTwoColor = Color.Default;
                 }
-                RaisePropertyChanged(() => ClockTwoTime);
+                OnPropertyChanged(nameof(ClockTwoTime));
             }
         }
 
@@ -67,7 +67,7 @@ namespace ChessClock
             {
                 if (_buttonOneColor == value) return;
                 _buttonOneColor = value;
-                RaisePropertyChanged(() => ButtonOneColor);
+                OnPropertyChanged(nameof(ButtonOneColor));
             }
         }
 
@@ -78,7 +78,7 @@ namespace ChessClock
             {
                 if (_buttonTwoColor == value) return;
                 _buttonTwoColor = value;
-                RaisePropertyChanged(() => ButtonTwoColor);
+                OnPropertyChanged(nameof(ButtonTwoColor));
             }
         }
 
@@ -89,7 +89,7 @@ namespace ChessClock
             {
                 if (_buttonOneEnabled == value) return;
                 _buttonOneEnabled = value;
-                RaisePropertyChanged(() => ButtonOneEnabled);
+                OnPropertyChanged(nameof(ButtonOneEnabled));
             }
         }
 
@@ -100,7 +100,7 @@ namespace ChessClock
             {
                 if (_buttonTwoEnabled == value) return;
                 _buttonTwoEnabled = value;
-                RaisePropertyChanged(() => ButtonTwoEnabled);
+                OnPropertyChanged(nameof(ButtonTwoEnabled));
             }
         }
 
@@ -111,7 +111,7 @@ namespace ChessClock
             {
                 if (_resetButtonEnabled == value) return;
                 _resetButtonEnabled = value;
-                RaisePropertyChanged(() => ResetButtonEnabled);
+                OnPropertyChanged(nameof(ResetButtonEnabled));
             }
         }
 
@@ -122,7 +122,7 @@ namespace ChessClock
             {
                 if (_settingsButtonEnabled == value) return;
                 _settingsButtonEnabled = value;
-                RaisePropertyChanged(() => SettingsButtonEnabled);
+                OnPropertyChanged(nameof(SettingsButtonEnabled));
             }
         }
 

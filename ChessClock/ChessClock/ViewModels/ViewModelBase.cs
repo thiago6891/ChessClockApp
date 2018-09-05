@@ -1,36 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Reflection;
+﻿using System.ComponentModel;
 
 namespace ChessClock
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName) =>
+        protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        protected void RaisePropertyChanged<T>(Expression<Func<T>> property)
-        {
-            var name = GetMemberInfo(property).Name;
-            OnPropertyChanged(name);
-        }
-
-        private MemberInfo GetMemberInfo(Expression expression)
-        {
-            MemberExpression operand;
-            LambdaExpression lambdaExpression = (LambdaExpression)expression;
-            if (lambdaExpression.Body as UnaryExpression != null)
-            {
-                UnaryExpression body = (UnaryExpression)lambdaExpression.Body;
-                operand = (MemberExpression)body.Operand;
-            }
-            else
-            {
-                operand = (MemberExpression)lambdaExpression.Body;
-            }
-            return operand.Member;
-        }
     }
 }
