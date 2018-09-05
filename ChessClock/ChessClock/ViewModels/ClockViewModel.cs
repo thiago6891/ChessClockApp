@@ -13,6 +13,8 @@ namespace ChessClock
 
         private TimeSpan _clockOneTime;
         private TimeSpan _clockTwoTime;
+        private Color _buttonOneColor;
+        private Color _buttonTwoColor;
         private bool _buttonOneEnabled;
         private bool _buttonTwoEnabled;
         private bool _resetButtonEnabled;
@@ -25,6 +27,15 @@ namespace ChessClock
             {
                 if (_clockOneTime == value) return;
                 _clockOneTime = value;
+                if (_clockOneTime == TimeSpan.Zero)
+                {
+                    ButtonOneEnabled = false;
+                    ButtonOneColor = Color.Red;
+                }
+                else
+                {
+                    ButtonOneColor = Color.Default;
+                }
                 RaisePropertyChanged(() => ClockOneTime);
             }
         }
@@ -36,7 +47,38 @@ namespace ChessClock
             {
                 if (_clockTwoTime == value) return;
                 _clockTwoTime = value;
+                if (_clockTwoTime == TimeSpan.Zero)
+                {
+                    ButtonTwoEnabled = false;
+                    ButtonTwoColor = Color.Red;
+                }
+                else
+                {
+                    ButtonTwoColor = Color.Default;
+                }
                 RaisePropertyChanged(() => ClockTwoTime);
+            }
+        }
+
+        public Color ButtonOneColor
+        {
+            get => _buttonOneColor;
+            private set
+            {
+                if (_buttonOneColor == value) return;
+                _buttonOneColor = value;
+                RaisePropertyChanged(() => ButtonOneColor);
+            }
+        }
+
+        public Color ButtonTwoColor
+        {
+            get => _buttonTwoColor;
+            private set
+            {
+                if (_buttonTwoColor == value) return;
+                _buttonTwoColor = value;
+                RaisePropertyChanged(() => ButtonTwoColor);
             }
         }
 
@@ -120,6 +162,8 @@ namespace ChessClock
 
             ClockOneTime = _clock.GetRemainingTime(Player.ONE);
             ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
+            ButtonOneColor = Color.Default;
+            ButtonTwoColor = Color.Default;
             ButtonOneEnabled = true;
             ButtonTwoEnabled = true;
             ResetButtonEnabled = false;

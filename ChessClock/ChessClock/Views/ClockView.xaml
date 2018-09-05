@@ -14,6 +14,7 @@
     <ContentPage.Content>
         <AbsoluteLayout>
             <Button Text="{Binding ClockOneTime, Converter={StaticResource TimeSpanToStringConverter}}"
+                    BackgroundColor="{Binding ButtonOneColor}"
                     IsEnabled="{Binding ButtonOneEnabled}"
                     Command="{Binding ButtonOneClickCommand}"
                     FontSize="Large"
@@ -42,6 +43,7 @@
                 </Image>
             </AbsoluteLayout>
             <Button Text="{Binding ClockTwoTime, Converter={StaticResource TimeSpanToStringConverter}}"
+                    BackgroundColor="{Binding ButtonTwoColor}"
                     IsEnabled="{Binding ButtonTwoEnabled}"
                     Command="{Binding ButtonTwoClickCommand}"
                     FontSize="Large"
