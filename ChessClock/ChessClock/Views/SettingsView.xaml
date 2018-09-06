@@ -15,7 +15,7 @@
     <ContentPage.Content>
         <StackLayout>
             <!-- Game Time -->
-            <Label Text="Game Time" HorizontalTextAlignment="Center" FontSize="Medium" Margin="0, 20, 0, 0" />
+            <Label Text="Game Time" HorizontalTextAlignment="Center" FontSize="Large" />
             <AbsoluteLayout>
                 <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, .33, 1"
                         ItemsSource="{Binding HoursPickerItems, Converter={StaticResource IntListToStringListConverter}}"
@@ -44,13 +44,13 @@
             </AbsoluteLayout>
             
             <!-- Delay Type -->
-            <Label Text="Delay Type" HorizontalTextAlignment="Center" FontSize="Medium" Margin="0, 20, 0, 0" />
+            <Label Text="Delay Type" HorizontalTextAlignment="Center" FontSize="Large" />
             <Picker Title="Select delay type" HorizontalOptions="Center" FontSize="Small"
                     ItemsSource="{Binding Source={x:Static local:SettingsViewModel.DelayTypes}}" 
                     SelectedItem="{Binding SelectedDelayType}" />
             
             <!-- Delay Time -->
-            <Label Text="Delay Time" HorizontalTextAlignment="Center" FontSize="Medium" Margin="0, 20, 0, 0"
+            <Label Text="Delay Time" HorizontalTextAlignment="Center" FontSize="Large"
                    IsEnabled="{Binding DelayEntryEnabled}" />
             <AbsoluteLayout>
                 <Picker AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, .33, 1"
@@ -82,7 +82,7 @@
                        IsEnabled="{Binding DelayEntryEnabled}" />
             </AbsoluteLayout>
 
-            <Button Text="Save" Clicked="SaveButton_Clicked" Margin="0, 20, 0, 0" />
+            <Button Text="Save" Clicked="SaveButton_Clicked" />
             <Button Text="Cancel" Clicked="CancelButton_Clicked" />
         </StackLayout>
     </ContentPage.Content>
