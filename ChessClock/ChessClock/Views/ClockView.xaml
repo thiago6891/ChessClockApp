@@ -17,7 +17,7 @@
                     BackgroundColor="{Binding ButtonOneColor}"
                     IsEnabled="{Binding ButtonOneEnabled}"
                     Command="{Binding ButtonOneClickCommand}"
-                    FontSize="Large"
+                    FontSize="64"
                     FontAttributes="Bold"
                     AbsoluteLayout.LayoutFlags="All" 
                     AbsoluteLayout.LayoutBounds="0, 0, 1, .425" 
@@ -46,7 +46,7 @@
                     BackgroundColor="{Binding ButtonTwoColor}"
                     IsEnabled="{Binding ButtonTwoEnabled}"
                     Command="{Binding ButtonTwoClickCommand}"
-                    FontSize="Large"
+                    FontSize="64"
                     FontAttributes="Bold"
                     AbsoluteLayout.LayoutFlags="All" 
                     AbsoluteLayout.LayoutBounds="0, 1, 1, .425" />
