@@ -158,7 +158,10 @@ namespace ChessClock
 
         public ClockViewModel()
         {
-            _clock = new NoDelayChessClock(TimeSpan.FromMinutes(5));
+            _clock = ChessClock.CreateClock(new ClockSettings(
+                TimeSpan.FromMinutes(5), 
+                ClockSettings.DelayType.None, 
+                TimeSpan.Zero));
 
             ClockOneTime = _clock.GetRemainingTime(Player.ONE);
             ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
@@ -182,21 +185,7 @@ namespace ChessClock
 
         private void SettingsChanged(SettingsViewModel sender, ClockSettings settings)
         {
-            switch (settings.Delay)
-            {
-                case ClockSettings.DelayType.None:
-                    _clock = new NoDelayChessClock(settings.GameTime);
-                    break;
-                case ClockSettings.DelayType.Fischer:
-                    _clock = new FischerDelayChessClock(settings.GameTime, settings.DelayTime);
-                    break;
-                case ClockSettings.DelayType.Bronstein:
-                    _clock = new BronsteinDelayChessClock(settings.GameTime, settings.DelayTime);
-                    break;
-                case ClockSettings.DelayType.Normal:
-                    _clock = new NormalDelayChessClock(settings.GameTime, settings.DelayTime);
-                    break;
-            }
+            _clock = ChessClock.CreateClock(settings);
         }
 
         public ClockSettings GetSettings() => _clock.GetSettings();

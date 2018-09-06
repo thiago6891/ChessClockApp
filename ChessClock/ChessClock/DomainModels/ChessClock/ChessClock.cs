@@ -27,13 +27,29 @@ namespace ChessClock
         protected TimeSpan TimerElapsedTime => _lastTimerStart.HasValue ?
             DateTime.Now - _lastTimerStart.Value : TimeSpan.Zero;
 
-        public ChessClock(TimeSpan gameTime)
+        protected ChessClock(TimeSpan gameTime)
         {
             _gameTime = gameTime;
             _remainingTime[Player.ONE] = gameTime;
             _remainingTime[Player.TWO] = gameTime;
             _countdownTimer = new Timer(TimeUp);
             _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        public static ChessClock CreateClock(ClockSettings settings)
+        {
+            switch (settings.Delay)
+            {
+                default:
+                case ClockSettings.DelayType.None:
+                    return new NoDelayChessClock(settings.GameTime);
+                case ClockSettings.DelayType.Fischer:
+                    return new FischerDelayChessClock(settings.GameTime, settings.DelayTime);
+                case ClockSettings.DelayType.Bronstein:
+                    return new BronsteinDelayChessClock(settings.GameTime, settings.DelayTime);
+                case ClockSettings.DelayType.Normal:
+                    return new NormalDelayChessClock(settings.GameTime, settings.DelayTime);
+            }
         }
 
         public void PressButton(Player player)
