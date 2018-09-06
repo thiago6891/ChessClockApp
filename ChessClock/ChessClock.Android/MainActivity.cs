@@ -5,7 +5,7 @@ using Android.OS;
 namespace ChessClock.Droid
 {
     [Activity(
-        Label = "ChessClock", 
+        Label = "Chess Clock", 
         Icon = "@mipmap/icon", 
         Theme = "@style/MainTheme", 
         MainLauncher = true, 
