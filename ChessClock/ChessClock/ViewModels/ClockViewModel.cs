@@ -185,6 +185,8 @@ namespace ChessClock
 
         private void SettingsChanged(SettingsViewModel sender, ClockSettings settings)
         {
+            ButtonOneEnabled = true;
+            ButtonTwoEnabled = true;
             _clock = ChessClock.CreateClock(settings);
         }
 
