@@ -21,6 +21,10 @@ namespace ChessClock.Droid
             base.OnCreate(savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+
+            Window.SetFlags(
+                Android.Views.WindowManagerFlags.KeepScreenOn, 
+                Android.Views.WindowManagerFlags.KeepScreenOn);
         }
     }
 }
