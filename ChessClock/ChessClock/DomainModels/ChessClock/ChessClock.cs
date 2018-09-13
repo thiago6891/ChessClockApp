@@ -80,6 +80,21 @@ namespace ChessClock
             _countdownTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
+        public void Pause()
+        {
+            if (_currentPlayer.HasValue)
+            {
+                _remainingTime[_currentPlayer.Value] -= TimerElapsedTime;
+                _countdownTimer.Dispose();
+                _lastTimerStart = null;
+            }
+        }
+
+        public void Resume()
+        {
+            if (_currentPlayer.HasValue) RestartTimer();
+        }
+
         public bool IsTimeUp()
         {
             foreach (var kvp in _remainingTime)

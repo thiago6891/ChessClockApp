@@ -196,5 +196,26 @@ namespace ChessClock.Tests
             Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime, clock.GetRemainingTime(Player.ONE)));
             Assert.AreEqual(TimeSpan.Zero, clock.GetRemainingTime(Player.TWO));
         }
+
+        [TestMethod]
+        public void ClockCanBePausedAndResumed()
+        {
+            var gameTime = GetRandomTimeMinutes(4, 5);
+            var clock = new NoDelayChessClock(gameTime);
+            var waitTime = GetRandomTimeMilliseconds(100, 200);
+
+            clock.PressButton(Player.TWO);
+            Thread.Sleep(waitTime);
+            clock.Pause();
+            var playerOnePausedTime = clock.GetRemainingTime(Player.ONE);
+            var playerTwoPausedTime = clock.GetRemainingTime(Player.TWO);
+            clock.Resume();
+            Thread.Sleep(waitTime);
+
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime, playerOnePausedTime));
+            Assert.IsTrue(IsWithinErrorMargin(gameTime - waitTime - waitTime, clock.GetRemainingTime(Player.ONE)));
+            Assert.AreEqual(gameTime, playerTwoPausedTime);
+            Assert.AreEqual(gameTime, clock.GetRemainingTime(Player.TWO));
+        }
     }
 }
