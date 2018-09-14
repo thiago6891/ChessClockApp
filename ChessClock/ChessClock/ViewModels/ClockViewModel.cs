@@ -9,7 +9,17 @@ namespace ChessClock
     {
         private const double CLOCK_REFRESH_RATE = 33.3;
 
-        private ChessClock _clock;
+        private ChessClock Clock
+        {
+            get
+            {
+                return (ChessClock)Application.Current.Properties[App.CLOCK_KEY];
+            }
+            set
+            {
+                Application.Current.Properties[App.CLOCK_KEY] = value;
+            }
+        }
 
         private TimeSpan _clockOneTime;
         private TimeSpan _clockTwoTime;
@@ -135,7 +145,7 @@ namespace ChessClock
             ButtonTwoEnabled = true;
             ResetButtonEnabled = true;
             SettingsButtonEnabled = false;
-            _clock.PressButton(Player.ONE);
+            Clock.PressButton(Player.ONE);
         }
 
         private void ButtonTwoClick()
@@ -144,7 +154,7 @@ namespace ChessClock
             ButtonTwoEnabled = false;
             ResetButtonEnabled = true;
             SettingsButtonEnabled = false;
-            _clock.PressButton(Player.TWO);
+            Clock.PressButton(Player.TWO);
         }
 
         public void Reset()
@@ -153,18 +163,13 @@ namespace ChessClock
             ButtonTwoEnabled = true;
             ResetButtonEnabled = false;
             SettingsButtonEnabled = true;
-            _clock.Reset();
+            Clock.Reset();
         }
 
         public ClockViewModel()
         {
-            _clock = ChessClock.CreateClock(new ClockSettings(
-                TimeSpan.FromMinutes(5), 
-                ClockSettings.DelayType.None, 
-                TimeSpan.Zero));
-
-            ClockOneTime = _clock.GetRemainingTime(Player.ONE);
-            ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
+            ClockOneTime = Clock.GetRemainingTime(Player.ONE);
+            ClockTwoTime = Clock.GetRemainingTime(Player.TWO);
             ButtonOneColor = Color.Default;
             ButtonTwoColor = Color.Default;
             ButtonOneEnabled = true;
@@ -175,8 +180,8 @@ namespace ChessClock
             var timer = new Timer(CLOCK_REFRESH_RATE);
             timer.Elapsed += (s, e) =>
             {
-                ClockOneTime = _clock.GetRemainingTime(Player.ONE);
-                ClockTwoTime = _clock.GetRemainingTime(Player.TWO);
+                ClockOneTime = Clock.GetRemainingTime(Player.ONE);
+                ClockTwoTime = Clock.GetRemainingTime(Player.TWO);
             };
             timer.Start();
 
@@ -187,9 +192,9 @@ namespace ChessClock
         {
             ButtonOneEnabled = true;
             ButtonTwoEnabled = true;
-            _clock = ChessClock.CreateClock(settings);
+            Clock = ChessClock.CreateClock(settings);
         }
 
-        public ClockSettings GetSettings() => _clock.GetSettings();
+        public ClockSettings GetSettings() => Clock.GetSettings();
     }
 }
